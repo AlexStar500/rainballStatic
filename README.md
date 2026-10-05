@@ -1,48 +1,39 @@
 # rainballStatic
 
-Статическая оболочка-браузер для Rainball (`https://rainball-psi.vercel.app/`).
-Никакого сервера здесь нет: страница отдаёт только HTML/CSS/JS, а целевой сайт
-грузится напрямую в `<iframe>` из браузера пользователя.
+Статическая оболочка для Rainball (`https://rainball-psi.vercel.app/`).
 
-## Почему трафик идёт мимо этого сайта
-
-`<iframe src="https://rainball-psi.vercel.app/">` — запрос уходит из браузера
-пользователя напрямую на Vercel. Прокси-сайт не видит ни запросов, ни ответов,
-ни cookie, ни данных форм. Логировать нечего, утекать нечему. Нужен интернет
-только до `rainball-psi.vercel.app`.
+Одна страница — полноэкранный `<iframe>` с целевым сайтом. Никакого своего
+интерфейса: пользователь видит только сам Rainball. Сервера здесь нет, запросы
+уходят из браузера пользователя напрямую на Vercel, прокси-сайт их не видит.
 
 ## Файлы
 
-- `index.html` — разметка оболочки (адресная строка, навигация, стартовый экран)
-- `style.css` — оформление
-- `app.js` — логика: нормализация адреса, история, переходы, горячие клавиши
-- `logo.png` — иконка
+- `index.html` — вся страница: разметка, стили и загрузка цели в одном файле
+- `logo.png` — иконка вкладки
+
+## Параметр `url`
+
+- без параметров — открывается главная Rainball
+- `?url=/search?q=привет` — открывает внутренний путь цели
+- `?url=https://любой.хост/путь` — открывает произвольный адрес
 
 ## Публикация
 
 ```powershell
 cd Q:\JavaScript\rainballStatic
-git init
-git branch -M main
-git add .
-git commit -m "Rainball proxy: статическая оболочка-браузер"
-git remote add origin https://github.com/AlexStar500/rainballStatic.git
-git push -u origin main
+git add -A
+git commit -m "обновление оболочки"
+git push
 ```
 
-Включение статики:
+Pages: репо публичный, Source — `Deploy from a branch`, ветка `main`, папка `/ (root)`.
+Адрес: `https://alexstar500.github.io/rainballStatic/`
 
-- **GitVerse Pages** — настройки репозитория → Pages → ветка `main`, корень `/`.
-- **GitHub Pages** (запасной вариант) — Settings → Pages → Source: Deploy from a
-  branch → `main` / `/ (root)`. Адрес будет `https://alexstar500.github.io/rainballStatic/`.
+## Свой домен
 
-## Управление
+Settings → Pages → Custom domain → вписать домен. В Cloudflare: CNAME на
+`alexstar500.github.io`, Proxy status — **DNS only**.
 
-- Адресная строка: полный URL, либо `example.com`, либо просто поисковый запрос —
-  тогда откроется `rainball-psi.vercel.app/search?q=запрос`.
-- Внутренние переходы внутри Rainball в адресную строку не попадают: iframe
-  другого origin, читать `location` из него нельзя. Кнопки «назад/вперёд»
-  работают по истории оболочки, а не по истории сайта.
-- `Alt+←` / `Alt+→` — назад/вперёд, `Ctrl+R` — обновить, `Ctrl+L` — фокус на строку,
-  свайп влево/вправо — назад/вперёд на телефоне.
-- Смена цели: `const TARGET` в начале `app.js`.
+## Смена цели
+
+`const TARGET` в `<script>` в конце `index.html`.
