@@ -31,7 +31,7 @@
 <body>
 <iframe id="view" title="Rainball" allow="autoplay; microphone; camera; clipboard-read; clipboard-write; fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 <script>
-  const TARGET = 'https://app.rainball.ru/';
+  const TARGET = 'https://proxy.rainball.ru/';
   const frame = document.getElementById('view');
   const q = new URLSearchParams(location.search).get('url');
   const target = !q ? TARGET : (/^https?:\/\//i.test(q) ? q : TARGET.replace(/\/+$/, '') + '/' + q.replace(/^\/+/, ''));
