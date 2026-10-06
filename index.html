@@ -31,16 +31,42 @@
 <body>
 <iframe id="view" title="Rainball" allow="autoplay; microphone; camera; clipboard-read; clipboard-write; fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 <script>
-  const TARGET = 'https://proxy.rainball.ru/';
+  const PRIMARY = 'https://proxy.rainball.ru/';
+  const FALLBACK = 'https://app.rainball.ru/';
   const frame = document.getElementById('view');
   const q = new URLSearchParams(location.search).get('url');
-  const target = !q ? TARGET : (/^https?:\/\//i.test(q) ? q : TARGET.replace(/\/+$/, '') + '/' + q.replace(/^\/+/, ''));
+  const isExternal = q && /^https?:\/\//i.test(q);
 
-  frame.src = target;
+  let loaded = false;
+  let switched = false;
 
-  frame.addEventListener('error', () => {
-    if (frame.src !== TARGET) frame.src = TARGET;
-  });
+  frame.addEventListener('load', () => { loaded = true; });
+
+  function build(base) {
+    if (!q) return base;
+    return isExternal ? q : base.replace(/\/+$/, '') + '/' + q.replace(/^\/+/, '');
+  }
+
+  function go(base, allowFallback) {
+    frame.src = build(base);
+    if (!allowFallback) return;
+    setTimeout(() => {
+      if (!loaded && !switched) {
+        switched = true;
+        frame.src = build(FALLBACK);
+      }
+    }, 8000);
+  }
+
+  if (isExternal) {
+    go(PRIMARY, false);
+  } else {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 4000);
+    fetch(PRIMARY, { method: 'HEAD', mode: 'no-cors', cache: 'no-store', signal: ctl.signal })
+      .then(() => { clearTimeout(timer); go(PRIMARY, true); })
+      .catch(() => { clearTimeout(timer); go(FALLBACK, false); });
+  }
 </script>
 </body>
 </html>
