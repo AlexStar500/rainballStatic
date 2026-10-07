@@ -1042,7 +1042,7 @@
             const errEl = document.getElementById('oauthFormError');
             if (!email || !password) { errEl.textContent = 'Fill all fields'; return; }
             try {
-                const res = await fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email,password}) });
+                const res = await fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'text/plain;charset=UTF-8'}, body:JSON.stringify({email,password}) });
                 const data = await res.json();
                 if (!res.ok) { errEl.textContent = t.wrong_creds; return; }
                 saveAccount({ id:data.user.id, username:data.user.username, email:data.user.email, avatar_emoji:data.user.avatar_emoji, avatar_gradient:data.user.avatar_gradient, token:data.token });
@@ -1062,7 +1062,7 @@
             const errEl = document.getElementById('oauthFormRegError');
             if (!username || !email || !password) { errEl.textContent = 'Fill all fields'; return; }
             try {
-                const res = await fetch('/api/auth/register', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,email,password,backup_word}) });
+                const res = await fetch('/api/auth/register', { method:'POST', headers:{'Content-Type':'text/plain;charset=UTF-8'}, body:JSON.stringify({username,email,password,backup_word}) });
                 const data = await res.json();
                 if (!res.ok) { errEl.textContent = data.error === 'Email already registered' ? t.user_exists : data.error; return; }
                 if (!data.user.avatar_emoji) data.user.avatar_emoji = '😀';
@@ -1145,7 +1145,7 @@
             const ctl = new AbortController();
             const to = setTimeout(() => ctl.abort(), 15000);
             try {
-                const res = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: ctl.signal });
+                const res = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body: JSON.stringify(body), signal: ctl.signal });
                 const text = await res.text();
                 let data = {}; try { data = JSON.parse(text); } catch {}
                 return { status: res.status, data };
@@ -1935,7 +1935,7 @@
             if (!email || !password) { errEl.textContent = 'Fill all fields'; return; }
             try {
                 const res = await fetch('/api/auth/login', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
                     body: JSON.stringify({ email, password })
                 });
                 const data = await res.json();
@@ -2010,7 +2010,7 @@
             if (!email) { err.textContent = 'Enter email'; return; }
             try {
                 const res = await fetch('/api/auth/forgot-password', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
                     body: JSON.stringify({ email })
                 });
                 const data = await res.json();
@@ -2030,7 +2030,7 @@
             if (!backup) { err.textContent = 'Enter backup word'; return; }
             try {
                 const res = await fetch('/api/auth/forgot-password', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
                     body: JSON.stringify({ email, backup_word: backup })
                 });
                 const data = await res.json();
@@ -2047,7 +2047,7 @@
             if (!pw || pw.length < 4) { err.textContent = 'Min 4 characters'; return; }
             try {
                 const res = await fetch('/api/auth/reset-password', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
                     body: JSON.stringify({ user_id: _fpUserId, new_password: pw })
                 });
                 const data = await res.json();
@@ -2065,7 +2065,7 @@
             if (!username || !email || !password) { errEl.textContent = 'Fill all fields'; return; }
             try {
                 const res = await fetch('/api/auth/register', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
                     body: JSON.stringify({ username, email, password, backup_word })
                 });
                 const data = await res.json();
