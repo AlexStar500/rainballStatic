@@ -1143,7 +1143,7 @@
 
         async function authPost(path, body) {
             const ctl = new AbortController();
-            const to = setTimeout(() => ctl.abort(), 15000);
+            const to = setTimeout(() => ctl.abort(), 60000);
             try {
                 const res = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body: JSON.stringify(body), signal: ctl.signal });
                 const text = await res.text();
