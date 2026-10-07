@@ -3000,7 +3000,7 @@ json body = {{"client_id","ID"},{"code",code},
                             <div class="emoji-grid" id="emojiGrid"></div>
                             <div class="avatar-picker-label">${t.profile_gradient_label}</div>
                             <div class="gradient-grid" id="gradientGrid"></div>
-                            <button class="auth-btn-primary" onclick="saveAvatar()">${t.save}</button>
+                            <button class="auth-btn-primary" id="saveAvatarBtn" onclick="saveAvatar()">${t.save}</button>
                         </div>
                     </div>
                     <div id="avatarMsg" class="profile-msg"></div>
@@ -3009,7 +3009,7 @@ json body = {{"client_id","ID"},{"code",code},
                     <h3>${t.change_username}</h3>
                     <div class="profile-row">
                         <input type="text" id="newUsernameInput" class="auth-input" placeholder="${t.new_username}" value="${authUser.username}">
-                        <button class="auth-btn-primary" onclick="changeUsername()">${t.save}</button>
+                        <button class="auth-btn-primary" id="saveUsernameBtn" onclick="changeUsername()">${t.save}</button>
                     </div>
                     <div id="profileMsg" class="profile-msg"></div>
                 </div>
@@ -3074,10 +3074,13 @@ json body = {{"client_id","ID"},{"code",code},
             const name = document.getElementById('newUsernameInput').value.trim();
             if (!name || name.length < 2) return;
             const msg = document.getElementById('profileMsg');
+            const btn = document.getElementById('saveUsernameBtn');
+            if (btn && btn.disabled) return;
+            if (btn) { btn.disabled = true; btn.innerHTML = '<span class="btn-spin"></span>' + t.save; }
             try {
-                const res = await fetch('/api/auth/profile', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                const res = await fetch('/api/auth/profile?token=' + encodeURIComponent(authToken), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
                     body: JSON.stringify({ username: name })
                 });
                 const data = await res.json();
@@ -3094,6 +3097,7 @@ json body = {{"client_id","ID"},{"code",code},
                     avatar.style.background = authUser.avatar_gradient || 'linear-gradient(135deg,#4facfe,#00f2fe)';
                 }
             } catch { msg.textContent = 'Error'; msg.style.color = '#ff4b5c'; }
+            finally { if (btn) { btn.disabled = false; btn.textContent = t.save; } }
         }
 
         let _selectedEmoji = null;
@@ -3219,11 +3223,17 @@ json body = {{"client_id","ID"},{"code",code},
 
         async function saveAvatar() {
             const msg = document.getElementById('avatarMsg');
-            if (!_selectedEmoji || !_selectedGradient) return;
+            if (!_selectedEmoji || !_selectedGradient) {
+                _selectedEmoji = (authUser && authUser.avatar_emoji) || '😀';
+                _selectedGradient = (authUser && authUser.avatar_gradient) || 'linear-gradient(135deg,#4facfe,#00f2fe)';
+            }
+            const btn = document.getElementById('saveAvatarBtn');
+            if (btn && btn.disabled) return;
+            if (btn) { btn.disabled = true; btn.innerHTML = '<span class="btn-spin"></span>' + t.save; }
             try {
-                const res = await fetch('/api/auth/profile', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                const res = await fetch('/api/auth/profile?token=' + encodeURIComponent(authToken), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
                     body: JSON.stringify({ avatar_emoji: _selectedEmoji, avatar_gradient: _selectedGradient })
                 });
                 const data = await res.json();
@@ -3243,6 +3253,7 @@ json body = {{"client_id","ID"},{"code",code},
                 msg.textContent = t.avatar_updated;
                 msg.style.color = '#3fb950';
             } catch { msg.textContent = 'Error'; msg.style.color = '#ff4b5c'; }
+            finally { if (btn) { btn.disabled = false; btn.textContent = t.save; } }
         }
 
         async function loadFriends() {
