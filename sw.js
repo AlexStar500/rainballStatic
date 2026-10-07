@@ -1,5 +1,6 @@
-const CACHE = 'rainball-v1.0.rain-1.0';
+const CACHE = 'rainball-v1.7.rain-3.1';
 const PRECACHE = ['/', '/style.css', '/logo.png', '/favicon.ico'];
+const API_ORIGIN = 'https://app.rainball.ru';
 
 self.addEventListener('install', (e) => {
     e.waitUntil(
@@ -9,15 +10,29 @@ self.addEventListener('install', (e) => {
 
 self.addEventListener('activate', (e) => {
     e.waitUntil(
-        caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+        caches.keys()
+            .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+            .then(() => self.clients.claim())
     );
 });
 
 self.addEventListener('fetch', (e) => {
     if (e.request.method !== 'GET') return;
+    const url = new URL(e.request.url);
+    if (url.origin !== self.location.origin) return;
+    if (url.pathname.startsWith('/api/')) {
+        e.respondWith(fetch(API_ORIGIN + url.pathname + url.search));
+        return;
+    }
     e.respondWith(
         fetch(e.request)
-            .then(r => { const resp = r.clone(); caches.open(CACHE).then(c => c.put(e.request, resp)); return r; })
+            .then(r => {
+                if (r.ok) {
+                    const resp = r.clone();
+                    caches.open(CACHE).then(c => c.put(e.request, resp));
+                }
+                return r;
+            })
             .catch(() => caches.match(e.request))
     );
 });

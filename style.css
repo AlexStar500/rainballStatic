@@ -727,10 +727,40 @@ body.incognito .incognito-btn { background: #4facfe; color: white; border-color:
     .home { padding: 129px 8px 20px; }
     .top { position: relative; top: auto; left: auto; right: auto; gap: 4px; margin: 0 0 16px; width: 100%; }
     .top-left { flex-direction: column; gap: 6px; align-items: flex-start; }
-    .top-links { gap: 4px; }
-    .top-right { gap: 4px; align-items: center; }
+    .top-links { gap: 4px; flex-wrap: wrap; justify-content: flex-start; }
+    .top-right { gap: 4px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
     .nav-link, .incognito-btn, .profile-btn { font-size: 12px; padding: 4px 8px; }
     .langs span { font-size: 11px; padding: 2px 5px; }
+
+    .agent-section {
+        position: relative;
+        right: auto;
+        top: auto;
+        width: 100%;
+        max-width: 420px;
+        margin: 18px auto 0;
+    }
+    .agent-selector {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+    }
+    .agent-option {
+        flex: 1 1 44%;
+        min-width: 130px;
+        padding: 10px 12px;
+        align-items: center;
+        text-align: center;
+    }
+    .agent-name { font-size: 13px; }
+    .agent-badge { font-size: 11px; }
+
+    .apps-grid { grid-template-columns: 1fr; }
+    .rod-page { padding: 12px 8px; }
+    .rod-title { font-size: 20px; }
+    .rod-msg { max-width: 95%; }
+    .rod-messages { max-height: none; }
 
     .partners { margin-top: 24px; max-width: 100%; padding: 0 8px; }
     .partner-card { flex-direction: column; text-align: center; padding: 14px; gap: 10px; }
@@ -1093,3 +1123,129 @@ body.incognito .incognito-btn { background: #4facfe; color: white; border-color:
 .bingsa-sidebar + .home {
     margin-left: 320px;
 }
+/* ================== Apps page ================== */
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+.app-card {
+    background: #161b22;
+    border: 1px solid #2b3139;
+    border-radius: 12px;
+    padding: 24px 18px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+.app-card:hover { border-color: #4facfe; transform: translateY(-2px); }
+.app-card-icon { font-size: 40px; }
+.app-card-name { font-size: 18px; font-weight: 700; color: #c9d1d9; }
+.app-card-desc { font-size: 13px; color: #8b949e; }
+
+/* ================== RodolAI chat ================== */
+.rod-page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.rod-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.rod-title { font-size: 24px; color: #c9d1d9; }
+.rod-messages {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    padding: 6px 0 14px;
+    min-height: 300px;
+    max-height: calc(100vh - 270px);
+}
+.rod-msg { max-width: 85%; }
+.rod-msg-user { align-self: flex-end; }
+.rod-msg-assistant { align-self: flex-start; }
+.rod-msg-content {
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #c9d1d9;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+.rod-msg-user .rod-msg-content { background: #1f6feb; color: #fff; border-bottom-right-radius: 4px; }
+.rod-msg-assistant .rod-msg-content { background: #1c2128; border: 1px solid #2b3139; border-bottom-left-radius: 4px; }
+.rod-typing .rod-msg-content { color: #8b949e; font-style: italic; }
+.rod-code {
+    background: #0d1117;
+    border: 1px solid #2b3139;
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    margin: 8px 0;
+}
+.rod-code code { font-family: Consolas, monospace; font-size: 13px; color: #c9d1d9; white-space: pre; }
+.rod-inline {
+    background: #0d1117;
+    border: 1px solid #2b3139;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: Consolas, monospace;
+    font-size: 13px;
+}
+.rod-error {
+    background: rgba(255, 75, 92, 0.12);
+    border: 1px solid #ff4b5c;
+    color: #ff4b5c;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-bottom: 8px;
+    white-space: pre-wrap;
+}
+.rod-controls { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.rod-btn {
+    background: #1c2128;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.rod-btn:hover { border-color: #4facfe; }
+.rod-btn-active { border-color: #3fb950; color: #3fb950; background: #12261a; }
+.rod-input-row { display: flex; gap: 8px; }
+.rod-input-row .auth-input { flex: 1; min-width: 0; }
+.rod-input-row .auth-btn-primary { min-width: 46px; }
+.rod-search-results {
+    margin-top: 8px;
+    background: #0d1117;
+    border: 1px solid #2b3139;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.rod-search-title { font-size: 12px; color: #8b949e; }
+.rod-search-loading { font-size: 12px; color: #484f58; }
+.rod-search-item {
+    font-size: 13px;
+    color: #58a6ff;
+    text-decoration: none;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.rod-search-item:hover { text-decoration: underline; }
