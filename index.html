@@ -1141,6 +1141,28 @@
             document.getElementById('registerFormContainer').style.display = 'flex';
         }
 
+        async function authPost(path, body) {
+            const ctl = new AbortController();
+            const to = setTimeout(() => ctl.abort(), 15000);
+            try {
+                const res = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: ctl.signal });
+                const text = await res.text();
+                let data = {}; try { data = JSON.parse(text); } catch {}
+                return { status: res.status, data };
+            } finally { clearTimeout(to); }
+        }
+
+        function authFinish(data) {
+            if (data.user && !data.user.avatar_emoji) data.user.avatar_emoji = '😀';
+            if (data.user && !data.user.avatar_gradient) data.user.avatar_gradient = 'linear-gradient(135deg,#4facfe,#00f2fe)';
+            authToken = data.token;
+            authUser = data.user;
+            localStorage.setItem('auth_token', data.token);
+            localStorage.setItem('auth_user', JSON.stringify(data.user));
+            saveAccount({ id: data.user.id, username: data.user.username, email: data.user.email, avatar_emoji: data.user.avatar_emoji, avatar_gradient: data.user.avatar_gradient, token: data.token });
+            window.location.href = '/';
+        }
+
         async function doLoginPage() {
             const email = document.getElementById('loginPageEmail').value;
             const password = document.getElementById('loginPagePassword').value;
@@ -1150,23 +1172,11 @@
             if (btn && btn.disabled) return;
             if (btn) { btn.disabled = true; btn.textContent = '...'; }
             try {
-                const ctl = new AbortController();
-                const to = setTimeout(() => ctl.abort(), 20000);
-                const res = await fetch('/api/auth/login', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password }), signal: ctl.signal
-                });
-                clearTimeout(to);
-                const text = await res.text();
-                let data = {}; try { data = JSON.parse(text); } catch {}
-                if (!res.ok) { errEl.textContent = t.wrong_creds; return; }
-                if (!data.token || !data.user) { errEl.textContent = 'Error'; return; }
-                authToken = data.token;
-                authUser = data.user;
-                localStorage.setItem('auth_token', data.token);
-                localStorage.setItem('auth_user', JSON.stringify(data.user));
-                saveAccount({ id: data.user.id, username: data.user.username, email: data.user.email, avatar_emoji: data.user.avatar_emoji, avatar_gradient: data.user.avatar_gradient, token: data.token });
-                window.location.href = '/';
+                let r = null;
+                for (let i = 0; i < 2; i++) { try { r = await authPost('/api/auth/login', { email, password }); break; } catch (e) { r = null; } }
+                if (!r) { errEl.textContent = 'Error'; return; }
+                if (r.status !== 200 || !r.data.token || !r.data.user) { errEl.textContent = t.wrong_creds; return; }
+                authFinish(r.data);
             } catch { errEl.textContent = 'Error'; }
             finally { const b = document.querySelector('#loginFormContainer .oauth-btn-primary'); if (b) { b.disabled = false; b.textContent = t.sign_in; } }
         }
@@ -1182,25 +1192,16 @@
             if (btn && btn.disabled) return;
             if (btn) { btn.disabled = true; btn.textContent = '...'; }
             try {
-                const ctl = new AbortController();
-                const to = setTimeout(() => ctl.abort(), 20000);
-                const res = await fetch('/api/auth/register', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, email, password, backup_word }), signal: ctl.signal
-                });
-                clearTimeout(to);
-                const text = await res.text();
-                let data = {}; try { data = JSON.parse(text); } catch {}
-                if (!res.ok) { errEl.textContent = data.error === 'Email already registered' ? t.user_exists : (data.error || 'Error'); return; }
-                if (!data.token || !data.user) { errEl.textContent = 'Error'; return; }
-                if (data.user && !data.user.avatar_emoji) data.user.avatar_emoji = '😀';
-                if (data.user && !data.user.avatar_gradient) data.user.avatar_gradient = 'linear-gradient(135deg,#4facfe,#00f2fe)';
-                authToken = data.token;
-                authUser = data.user;
-                localStorage.setItem('auth_token', data.token);
-                localStorage.setItem('auth_user', JSON.stringify(data.user));
-                saveAccount({ id: data.user.id, username: data.user.username, email: data.user.email, avatar_emoji: data.user.avatar_emoji, avatar_gradient: data.user.avatar_gradient, token: data.token });
-                window.location.href = '/';
+                let r = null;
+                for (let i = 0; i < 2; i++) { try { r = await authPost('/api/auth/register', { username, email, password, backup_word }); break; } catch (e) { r = null; } }
+                if (!r) { errEl.textContent = 'Error'; return; }
+                if (r.data.error === 'Email already registered') {
+                    const lr = await authPost('/api/auth/login', { email, password }).catch(() => null);
+                    if (lr && lr.status === 200 && lr.data.token && lr.data.user) { authFinish(lr.data); return; }
+                    errEl.textContent = t.user_exists; return;
+                }
+                if (r.status !== 200 || !r.data.token || !r.data.user) { errEl.textContent = (r.data && r.data.error) || 'Error'; return; }
+                authFinish(r.data);
             } catch { errEl.textContent = 'Error'; }
             finally { const b = document.querySelector('#registerFormContainer .oauth-btn-primary'); if (b) { b.disabled = false; b.textContent = t.register_btn; } }
         }
