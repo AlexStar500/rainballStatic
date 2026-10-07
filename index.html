@@ -1119,7 +1119,8 @@
         }
 
         function initLoginPage() {
-            if (authUser) { window.location.href = '/'; }
+            if (authUser) { window.location.href = '/'; return; }
+            if (!savedAccounts.length) showLoginForm();
         }
 
         function loginWithPickedAccount(accountId) {
