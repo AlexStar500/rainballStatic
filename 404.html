@@ -3165,9 +3165,6 @@ json body = {{"client_id","ID"},{"code",code},
             _selectedEmoji = authUser.avatar_emoji || '😀';
             _selectedGradient = authUser.avatar_gradient || 'linear-gradient(135deg,#4facfe,#00f2fe)';
             if (customInput) customInput.value = _selectedEmoji;
-            const loadingHtml = '<div class="picker-loading">' + (t.history_loading || 'Loading...') + '</div>';
-            emojiGrid.innerHTML = loadingHtml;
-            gradientGrid.innerHTML = loadingHtml;
             const esc = s => s.replace(/'/g, "\\'");
             const render = (emojis, gradients) => {
                 emojiGrid.innerHTML = emojis.map(e =>
@@ -3178,14 +3175,17 @@ json body = {{"client_id","ID"},{"code",code},
                 ).join('');
             };
             let attempts = 0;
+            render(FALLBACK_AVATAR_EMOJIS, FALLBACK_AVATAR_GRADIENTS);
             const tryLoad = () => {
-                fetch('/api/avatars').then(r => { if (!r.ok) throw 0; return r.json(); }).then(data => {
+                const actl = new AbortController();
+                const to = setTimeout(() => actl.abort(), 6000);
+                fetch('/api/avatars', { signal: actl.signal }).then(r => { clearTimeout(to); if (!r.ok) throw 0; return r.json(); }).then(data => {
                     if (!data || !Array.isArray(data.emojis) || !data.emojis.length) throw 0;
                     render(data.emojis, data.gradients || FALLBACK_AVATAR_GRADIENTS);
                 }).catch(() => {
+                    clearTimeout(to);
                     attempts++;
-                    if (attempts < 3) setTimeout(tryLoad, 600 * attempts);
-                    else render(FALLBACK_AVATAR_EMOJIS, FALLBACK_AVATAR_GRADIENTS);
+                    if (attempts < 3) setTimeout(tryLoad, 800 * attempts);
                 });
             };
             tryLoad();
