@@ -973,7 +973,7 @@
                             <button class="incognito-btn" onclick="toggleIncognito()">${incognito ? '🕶️ ' + t.incognito : t.incognito}</button>
                             <div class="top-links">
                                 <a href="/translator" class="nav-link">📝 ${t.translator}</a>
-                                <a href="/apps" class="nav-link">🧩 ${t.apps}</a>
+                                <a href="/apps" class="nav-link">${t.apps}</a>
                                 <a href="/dev" class="nav-link">${t.dev_btn}</a>
                                 ${isAdmin ? `<a href="/admin" class="nav-link">👑 Админ-панель</a>` : ''}
                             </div>
@@ -1244,7 +1244,7 @@
                             <p class="oauth-register-link" onclick="showLoginForm()">${t.sign_in}</p>
                         </div>
                         <div class="oauth-footer">
-                            <a href="/" class="oauth-privacy-link">← ${t.dev_back}</a>
+                            <a href="/" class="oauth-privacy-link">${t.dev_back}</a>
                             <span class="oauth-version">${FULL_VERSION}</span>
                         </div>
                     </div>
@@ -2940,7 +2940,7 @@ json body = {{"client_id","ID"},{"code",code},
             return `
             <div class="dev-page">
                 <div class="dev-header">
-                    <a href="/" class="back-link">← ${t.dev_back}</a>
+                    <a href="/" class="back-link">${t.dev_back}</a>
                     <h1 class="dev-title">🧩 ${t.apps_title}</h1>
                 </div>
                 <div class="apps-grid">
@@ -2975,7 +2975,7 @@ json body = {{"client_id","ID"},{"code",code},
             return `
             <div class="rod-page">
                 <div class="rod-header">
-                    <a href="/apps" class="back-link">← ${t.dev_back}</a>
+                    <a href="/apps" class="back-link">${t.dev_back}</a>
                     <h1 class="rod-title">🧠 RodolAI</h1>
                 </div>
                 <div class="rod-messages" id="rodMessages"></div>
@@ -3017,7 +3017,29 @@ json body = {{"client_id","ID"},{"code",code},
             if (el) el.style.display = 'none';
         }
 
-        function rodAddMessage(role, content, runSearch) {
+        function rodTypeContent(el, html) {
+            if (el._rodTypeTimer) { clearInterval(el._rodTypeTimer); el._rodTypeTimer = null; }
+            const total = html.length;
+            if (!total) { el.innerHTML = ''; return; }
+            const step = Math.max(1, Math.ceil(total / 110));
+            let i = 0;
+            el.innerHTML = '';
+            el._rodTypeTimer = setInterval(() => {
+                i += step;
+                el.innerHTML = html.slice(0, i);
+                const b = document.getElementById('rodMessages');
+                if (b) b.scrollTop = b.scrollHeight;
+                if (i >= total) {
+                    clearInterval(el._rodTypeTimer);
+                    el._rodTypeTimer = null;
+                    el.innerHTML = html;
+                    const b2 = document.getElementById('rodMessages');
+                    if (b2) b2.scrollTop = b2.scrollHeight;
+                }
+            }, 16);
+        }
+
+        function rodAddMessage(role, content, runSearch, typeWrite) {
             const box = document.getElementById('rodMessages');
             if (!box) return null;
             const div = document.createElement('div');
@@ -3030,6 +3052,10 @@ json body = {{"client_id","ID"},{"code",code},
             const body = role === 'user' ? escapeHtml(text).replace(/\n/g, '<br>') : rodFormat(text);
             div.innerHTML = '<div class="rod-msg-content">' + body + '</div>';
             box.appendChild(div);
+            const contentEl = div.querySelector('.rod-msg-content');
+            if (typeWrite && role !== 'user' && contentEl) {
+                rodTypeContent(contentEl, body);
+            }
             if (role !== 'user' && runSearch) queries.forEach(q => { if (q) rodRunSearch(div, q); });
             box.scrollTop = box.scrollHeight;
             return div;
@@ -3083,7 +3109,7 @@ json body = {{"client_id","ID"},{"code",code},
                 let data = {}; try { data = await res.json(); } catch {}
                 if (typing) typing.remove();
                 if (res.status === 200 && data.reply) {
-                    rodAddMessage('assistant', data.reply, true);
+                    rodAddMessage('assistant', data.reply, true, true);
                 } else {
                     rodShowError(data.error || 'server');
                 }
@@ -3164,7 +3190,7 @@ json body = {{"client_id","ID"},{"code",code},
             return `
             <div class="dev-page">
                 <div class="dev-header">
-                    <a href="/" class="back-link">← ${t.dev_back}</a>
+                    <a href="/" class="back-link">${t.dev_back}</a>
                     <h1 class="dev-title">${t.admin_panel}</h1>
                 </div>
                 <div class="dev-section">
