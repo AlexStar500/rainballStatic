@@ -2860,9 +2860,10 @@ json body = {{"client_id","ID"},{"code",code},
                     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                     body: JSON.stringify({ query })
                 });
-                const data = await res.json();
-                if (data.error) {
-                    bingsaAddMessage('assistant', 'Ошибка: ' + (data.detail || data.error));
+                const data = await res.json().catch(() => null);
+                if (!res.ok || (data && data.error)) {
+                    const msg = data ? (data.detail || data.error) : '';
+                    bingsaAddMessage('assistant', 'Ошибка: HTTP ' + res.status + (msg ? ': ' + msg : '') + (res.status === 401 ? ' — сессия истекла, выйдите и войдите заново' : ''));
                     return;
                 }
                 bingsaAddMessage('assistant', data.response);

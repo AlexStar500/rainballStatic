@@ -1,4 +1,4 @@
-const CACHE = 'rainball-v1.7.rain-3.1';
+const CACHE = 'rainball-v1.7.rain-3.2';
 const PRECACHE = ['/', '/style.css', '/logo.png', '/favicon.ico'];
 const API_ORIGIN = 'https://app.rainball.ru';
 
@@ -17,13 +17,22 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
-    if (e.request.method !== 'GET') return;
     const url = new URL(e.request.url);
     if (url.origin !== self.location.origin) return;
     if (url.pathname.startsWith('/api/')) {
-        e.respondWith(fetch(API_ORIGIN + url.pathname + url.search));
+        if (e.request.method === 'GET') {
+            e.respondWith(fetch(API_ORIGIN + url.pathname + url.search));
+            return;
+        }
+        e.respondWith(fetch(new Request(API_ORIGIN + url.pathname + url.search, {
+            method: e.request.method,
+            headers: e.request.headers,
+            body: e.request.method === 'GET' || e.request.method === 'HEAD' ? undefined : e.request.body,
+            mode: 'cors'
+        })));
         return;
     }
+    if (e.request.method !== 'GET') return;
     e.respondWith(
         fetch(e.request)
             .then(r => {
