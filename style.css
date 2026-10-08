@@ -68,6 +68,11 @@ body.incognito .incognito-btn { background: #4facfe; color: white; border-color:
 .instant-answer { background: #1c2128; border-radius: 12px; padding: 16px 20px; margin: 0 20px 16px; border-left: 4px solid #4facfe; }
 .instant-answer a { color: #4facfe; }
 
+/* Тренировка поиска (Да/Нет) */
+.search-feedback { background: #1c2128; border: 1px solid #30363d; border-radius: 12px; padding: 14px 20px; margin: 0 20px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.search-feedback span { flex: 1; min-width: 180px; color: #c9d1d9; font-size: 13px; }
+.search-feedback .auth-btn-primary, .search-feedback button { flex-shrink: 0; }
+
 /* Результаты */
 .results-list { padding: 20px; }
 .result-item { background: #161b22; border-radius: 14px; padding: 18px; margin-bottom: 12px; border: 1px solid #2b3139; }
@@ -794,6 +799,7 @@ body.incognito .incognito-btn { background: #4facfe; color: white; border-color:
     .map-canvas { height: 220px; }
 
     .instant-answer { margin: 0 8px 8px; padding: 10px 14px; font-size: 13px; }
+    .search-feedback { margin: 0 8px 8px; padding: 10px 14px; }
 
     .translator-page { padding: 8px; }
     .translator-grid { flex-direction: column; gap: 4px; }

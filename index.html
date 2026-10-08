@@ -1451,6 +1451,7 @@
                     <span class="tab ${currentType==='news'?'active':''}" data-type="news" onclick="switchType('news')">${t.news_tab}</span>
                 </div>
                 <div id="instantAnswer"></div>
+                <div id="searchFeedback"></div>
                 <div id="results"></div>
                 <div id="loadMore" style="display:none;text-align:center;padding:12px"><button onclick="loadMore()" style="padding:8px 24px;cursor:pointer">${t.search_show_more}</button></div>`;
         }
@@ -1600,6 +1601,44 @@
         }
 
         let _resultId = 0;
+        let _lastSearchResults = null;
+        function renderSearchFeedback(results) {
+            const el = document.getElementById('searchFeedback');
+            if (!el) return;
+            if (!authUser || !results || results.length === 0) { el.innerHTML = ''; return; }
+            el.innerHTML = `
+                <div class="search-feedback">
+                    <span>Ответ полезен по запросу «${escapeHtml(currentQuery)}»? Тренирует поиск.</span>
+                    <button class="auth-btn-primary" onclick="trainFromSearch(true)">✅ Да</button>
+                    <button style="padding:6px 12px;cursor:pointer;background:#da3633;border:none;color:#fff;border-radius:8px;font-size:12px" onclick="trainFromSearch(false)">❌ Нет</button>
+                </div>`;
+        }
+        async function trainFromSearch(isGood) {
+            const el = document.getElementById('searchFeedback');
+            if (!el || !authUser) return;
+            el.innerHTML = `<div class="search-feedback"><span>⏳ Подождите...</span></div>`;
+            try {
+                const body = isGood
+                    ? { query: currentQuery, result: _lastSearchResults && _lastSearchResults[0] }
+                    : { query: currentQuery };
+                if (isGood && !body.result) { el.innerHTML = ''; return; }
+                const res = await fetch('/api/search/' + (isGood ? 'train' : 'negative'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    el.innerHTML = `<div class="search-feedback"><span>${isGood ? '✅ Ответ запомнен. Он теперь показывается первым по этому запросу.' : '✖ Принято, ищу другой ответ...'}</span></div>`;
+                    if (!isGood) setTimeout(() => doSearch(false), 600);
+                } else {
+                    el.innerHTML = `<div class="search-feedback"><span>Ошибка: ${escapeHtml(data.error || data.detail || 'unknown')}</span></div>`;
+                }
+            } catch {
+                el.innerHTML = '';
+            }
+        }
+
         function renderResults(results) {
             if (!results || !results.length) return `<p class="no-results">${t.no_results}</p>`;
             let html = '<div class="results-list">';
@@ -1901,6 +1940,8 @@
                 }
                 if (!append) document.getElementById('instantAnswer').innerHTML = renderInstant(data.instant);
                 const html = renderResults(data.results);
+                _lastSearchResults = data.results;
+                if (!append) renderSearchFeedback(data.results);
                 if (append) {
                     document.getElementById('results').insertAdjacentHTML('beforeend', html);
                 } else {
@@ -3218,7 +3259,7 @@ json body = {{"client_id","ID"},{"code",code},
                             <button class="auth-btn-primary" onclick="saveGroqKey()">💾 Сохранить</button>
                             <span id="groqKeyStatus" style="font-size:13px"></span>
                         </div>
-                        <p style="color:#8b949e;font-size:12px;margin-top:10px">Ключ используется моделью RodolAI (llama-3.1-8b-instant). Оставьте пустым, чтобы вернуть ключ по умолчанию.</p>
+                        <p style="color:#8b949e;font-size:12px;margin-top:10px">Ключ используется моделью RodolAI (gpt-oss-120b). Оставьте пустым, чтобы вернуть ключ по умолчанию.</p>
                     </div>
                 </div>
             </div>`;
