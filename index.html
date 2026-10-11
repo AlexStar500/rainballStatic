@@ -3040,51 +3040,69 @@ json body = {{"client_id","ID"},{"code",code},
         let _msActive = null;
         let _msConvs = [];
         let _msTimer = null;
+        let _msSeen = {};
+
+        const MS_EMOJIS = ['😀','😁','😂','🤣','😉','😊','😎','🥳','😍','🤯','😢','😭','🙃','😴','🤔','👍','👎','👏','🙏','💪','🔥','⭐','🌟','💫','❤️','🧡','💛','💚','💙','💜','🖤','💯','✨','🎉','🎊','🎁','🚀','🌈','⚡','🎮','🎵','🎶','🍕','🍔','🌮','🍦','☕','🌊','🍀','🐼','🦄','🐺','🦊','🐸','💎','🔮','🪄','👻','🤖','👽','💀','🎃','🧛','👑','🏆','🥇','🎯','♟️','🎰','📚','🧠','💡','🔑','⚙️','🛡️','📡','🎤','🎧','🎸','🥁','🎬','🎲','🧩','✈️','⚓','🚗','🏰','🌋','🏔️','🌅','🌙','☀️','🌺','🌸','🌻','🍄','🪐','☄️','🧿'];
 
         function messengerHTML() {
             if (!authUser) {
                 return `
-                <div class="ms-page">
-                    <div class="dev-header">
-                        <a href="/" class="back-link">${t.dev_back}</a>
-                        <h1 class="ms-title">💬 ${t.messenger_title}</h1>
-                    </div>
-                    <div class="ms-login-gate">
-                        <div>${t.messenger_need_login}</div>
-                        <button class="auth-btn-primary" onclick="toggleAuthModal('login')">${t.sign_in}</button>
+                <div class="ms-page ms-auth-page">
+                    <div class="ms-auth-card">
+                        <div class="ms-auth-logo"><img src="/logo.png" class="ms-auth-logo-img" alt="Rainball"></div>
+                        <h1 class="ms-title-glow">💬 ${t.messenger_title}</h1>
+                        <div class="ms-auth-sub">RAINBALL</div>
+                        <div class="ms-auth-msg">${t.messenger_need_login}</div>
+                        <button class="ms-btn-p" onclick="toggleAuthModal('login')">${t.sign_in}</button>
+                        <div class="ms-auth-back"><a href="/" class="back-link">${t.dev_back}</a></div>
                     </div>
                 </div>`;
             }
             return `
             <div class="ms-page">
-                <div class="dev-header">
-                    <a href="/apps" class="back-link">${t.dev_back}</a>
-                    <h1 class="ms-title">💬 ${t.messenger_title} <span class="ms-unread-total" id="msUnreadTotal"></span></h1>
-                </div>
-                <div class="ms-layout">
-                    <div class="ms-side">
-                        <input type="text" id="msSearch" class="auth-input" placeholder="${t.messenger_search_ph}" autocomplete="off" maxlength="60">
-                        <div class="ms-results" id="msResults"></div>
-                        <div class="ms-list" id="msList"></div>
+                <aside class="ms-sidebar">
+                    <div class="ms-user-bar">
+                        <span class="ms-mini-avatar" style="background:${authUser.avatar_gradient || '#1c2128'}">${authUser.avatar_emoji || '☺'}</span>
+                        <span class="ms-user-name">${escapeHtml(authUser.username)}</span>
+                        <a href="/apps" class="ms-exit" title="${t.dev_back}">✖</a>
                     </div>
-                    <div class="ms-main">
-                        <div class="ms-chat" id="msChat"></div>
-                        <div class="ms-input-row" id="msInputRow" style="display:none">
-                            <input type="text" id="msInput" class="auth-input" placeholder="${t.messenger_ph}" autocomplete="off" maxlength="4000">
-                            <button class="auth-btn-primary" onclick="msSend()">➤</button>
+                    <div class="ms-search-box">
+                        <div class="ms-search-row">
+                            <input type="text" id="msSearch" placeholder="${t.messenger_search_ph}" maxlength="60" autocomplete="off">
+                            <button onclick="msSearchUsers(document.getElementById('msSearch').value)">＋</button>
                         </div>
+                        <div class="ms-results" id="msResults"></div>
                     </div>
-                </div>
+                    <div class="ms-contacts" id="msList"></div>
+                </aside>
+                <main class="ms-main">
+                    <header class="ms-chat-header"><span id="msChatWith">💬 ${t.messenger_title}</span></header>
+                    <div class="ms-messages" id="msMessages"></div>
+                    <div class="ms-emoji-panel" id="msEmojiPanel">${MS_EMOJIS.map(e => '<span onclick="msAddEmoji(\'' + e + '\')">' + e + '</span>').join('')}</div>
+                    <div class="ms-input-box" id="msInputBox">
+                        <button class="ms-emoji-btn" onclick="msToggleEmoji()">😀</button>
+                        <input type="text" id="msInput" placeholder="${t.messenger_ph}" maxlength="4000" autocomplete="off">
+                        <button class="ms-send-btn" onclick="msSend()">➤</button>
+                    </div>
+                </main>
             </div>`;
         }
 
         function initMessenger() {
             _msActive = null;
             _msConvs = [];
+            _msSeen = {};
             const search = document.getElementById('msSearch');
-            if (search) search.addEventListener('keydown', e => { if (e.key === 'Enter') msSearchUsers(search.value); });
+            if (search) search.addEventListener('keydown', e => { msEnsureAudio(); if (e.key === 'Enter') msSearchUsers(search.value); });
             const input = document.getElementById('msInput');
-            if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter') msSend(); });
+            if (input) {
+                input.addEventListener('keydown', e => { msEnsureAudio(); if (e.key === 'Enter') msSend(); });
+                input.addEventListener('focus', msEnsureAudio);
+            }
+            const head = document.getElementById('msChatWith');
+            if (head) head.textContent = '💬 ' + t.messenger_title;
+            const box = document.getElementById('msInputBox');
+            if (box) box.style.display = 'none';
             msRefresh();
             clearInterval(_msTimer);
             _msTimer = setInterval(msRefresh, 4000);
@@ -3097,11 +3115,12 @@ json body = {{"client_id","ID"},{"code",code},
                 const res = await fetch('/api/messenger/conversations', { headers: { 'Authorization': 'Bearer ' + authToken } });
                 if (!res.ok) return;
                 const d = await res.json();
+                const prevUnread = (_msConvs || []).reduce((s, c) => s + c.unread, 0);
                 _msConvs = d.conversations || [];
-                const badge = document.getElementById('msUnreadTotal');
-                if (badge) badge.textContent = d.total_unread ? '(' + d.total_unread + ')' : '';
                 msRenderList();
+                if ((d.total_unread || 0) > prevUnread) msSoundIncoming();
                 if (!_msActive && _msConvs.length) msSelect(_msConvs[0].other_id);
+                else if (_msActive) msOpenChat(true);
             } catch (e) {}
         }
 
@@ -3109,13 +3128,13 @@ json body = {{"client_id","ID"},{"code",code},
             const el = document.getElementById('msList');
             if (!el) return;
             el.innerHTML = _msConvs.length ? _msConvs.map(c => `
-                <div class="ms-item ${c.other_id === _msActive ? 'ms-item-active' : ''} ${c.unread ? 'ms-item-unread' : ''}" onclick="msSelect('${c.other_id}')">
-                    <div class="ms-item-top">
-                        <span class="ms-item-name">${c.other.avatar_emoji} ${escapeHtml(c.other.username)}</span>
-                        ${c.last ? `<span class="ms-item-time">${msTime(c.last.ts)}</span>` : ''}
+                <div class="item ${c.other_id === _msActive ? 'active' : ''}" onclick="msSelect('${c.other_id}')">
+                    <div class="item-row">
+                        <span class="item-ava">${c.other.avatar_emoji}</span>
+                        <span class="item-name">${escapeHtml(c.other.username)}</span>
+                        ${c.unread ? `<span class="ms-unread">${c.unread}</span>` : ''}
                     </div>
-                    <div class="ms-item-last">${c.last ? (c.last.from === authUser.id ? t.messenger_you + ': ' : '') + escapeHtml(c.last.text) : ''}</div>
-                    ${c.unread ? `<span class="ms-badge">${c.unread}</span>` : ''}
+                    <div class="item-last">${c.last ? (c.last.from === authUser.id ? t.messenger_you + ': ' : '') + escapeHtml(c.last.text) : ''}</div>
                 </div>`).join('') : `<div class="ms-none">${t.messenger_empty}</div>`;
         }
 
@@ -3123,27 +3142,35 @@ json body = {{"client_id","ID"},{"code",code},
             if (!otherId) return;
             _msActive = otherId;
             msRenderList();
-            msOpenChat();
+            msOpenChat(false);
         }
 
-        async function msOpenChat() {
+        async function msOpenChat(silent) {
             if (!_msActive) return;
             try {
                 const res = await fetch('/api/messenger/conversation?with=' + _msActive, { headers: { 'Authorization': 'Bearer ' + authToken } });
                 if (!res.ok) return;
                 const d = await res.json();
-                const chat = document.getElementById('msChat');
-                const row = document.getElementById('msInputRow');
-                if (!chat) return;
-                if (row) row.style.display = 'flex';
-                chat.innerHTML = `
-                    <div class="ms-chat-head">${d.other.avatar_emoji} ${escapeHtml(d.other.username)}</div>
-                    ${d.conversation.messages.length ? d.conversation.messages.map(m => `
-                        <div class="ms-msg ${m.from === authUser.id ? 'ms-msg-mine' : 'ms-msg-theirs'}">
-                            <div class="ms-msg-text">${escapeHtml(m.text)}</div>
-                            <div class="ms-msg-time">${msTime(m.ts)}</div>
-                        </div>`).join('') : `<div class="ms-none">${t.messenger_empty}</div>`}`;
-                chat.scrollTop = chat.scrollHeight;
+                const who = d.other || {};
+                const msgs = d.conversation.messages || [];
+                const prev = _msSeen[_msActive] || 0;
+                const last = msgs[msgs.length - 1];
+                if (!silent && prev > 0 && msgs.length > prev && last && last.from !== authUser.id) msSoundIncoming();
+                _msSeen[_msActive] = msgs.length;
+                const head = document.getElementById('msChatWith');
+                if (head) head.innerHTML = `${who.avatar_emoji || ''} ${escapeHtml(who.username || '')}`;
+                const box = document.getElementById('msInputBox');
+                if (box) box.style.display = 'flex';
+                const cont = document.getElementById('msMessages');
+                if (cont) {
+                    const nearBottom = msgs.length === 0 || cont.scrollHeight - cont.scrollTop - cont.clientHeight < 90;
+                    cont.innerHTML = msgs.length ? msgs.map(m => `
+                        <div class="message ${m.from === authUser.id ? 'mine' : ''}">
+                            <small>${m.from === authUser.id ? t.messenger_you : escapeHtml(who.username || '')} · ${msTime(m.ts)}</small>
+                            <p>${escapeHtml(m.text)}</p>
+                        </div>`).join('') : `<div class="ms-none">${t.messenger_empty}</div>`;
+                    if (nearBottom) cont.scrollTop = cont.scrollHeight;
+                }
             } catch (e) {}
         }
 
@@ -3152,6 +3179,7 @@ json body = {{"client_id","ID"},{"code",code},
             const input = document.getElementById('msInput');
             const text = (input && input.value ? input.value : '').trim();
             if (!text) return;
+            msEnsureAudio();
             try {
                 const res = await fetch('/api/messenger/send', {
                     method: 'POST',
@@ -3160,7 +3188,8 @@ json body = {{"client_id","ID"},{"code",code},
                 });
                 if (!res.ok) return;
                 if (input) input.value = '';
-                msOpenChat();
+                msSoundSend();
+                msOpenChat(false);
             } catch (e) {}
         }
 
@@ -3174,7 +3203,7 @@ json body = {{"client_id","ID"},{"code",code},
                 if (!r.ok) return;
                 const users = await r.json();
                 res.innerHTML = users.length ? users.map(u => `
-                    <div class="ms-result" onclick="msPickUser('${u.id}')">${u.avatar_emoji} ${escapeHtml(u.username)}</div>`).join('') : `<div class="ms-none">${t.messenger_empty}</div>`;
+                    <div class="ms-result" onclick="msPickUser('${u.id}')"><span class="item-ava">${u.avatar_emoji}</span>${escapeHtml(u.username)}</div>`).join('') : `<div class="ms-none">${t.messenger_empty}</div>`;
             } catch (e) {}
         }
 
@@ -3188,6 +3217,48 @@ json body = {{"client_id","ID"},{"code",code},
 
         function msTime(iso) {
             try { return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; }
+        }
+
+        function msToggleEmoji() {
+            const p = document.getElementById('msEmojiPanel');
+            if (p) p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function msAddEmoji(e) {
+            msEnsureAudio();
+            const input = document.getElementById('msInput');
+            if (input) { input.value += e; input.focus(); }
+        }
+
+        let _msAudioCtx = null;
+        function msEnsureAudio() {
+            if (!_msAudioCtx) { try { _msAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+            if (_msAudioCtx && _msAudioCtx.state === 'suspended') _msAudioCtx.resume();
+        }
+        function msTone(freq, dur, when, gain, type) {
+            if (!_msAudioCtx) return;
+            const t = _msAudioCtx.currentTime + when;
+            const o = _msAudioCtx.createOscillator();
+            const g = _msAudioCtx.createGain();
+            o.type = type || 'sine';
+            o.frequency.value = freq;
+            g.gain.setValueAtTime(0.0001, t);
+            g.gain.exponentialRampToValueAtTime(gain || 0.12, t + 0.01);
+            g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+            o.connect(g); g.connect(_msAudioCtx.destination);
+            o.start(t); o.stop(t + dur + 0.02);
+        }
+        function msSoundSend() {
+            msEnsureAudio();
+            if (!_msAudioCtx) return;
+            msTone(880, 0.09, 0, 0.1, 'sine');
+            msTone(1320, 0.12, 0.05, 0.08, 'sine');
+        }
+        function msSoundIncoming() {
+            msEnsureAudio();
+            if (!_msAudioCtx) return;
+            msTone(660, 0.12, 0, 0.1, 'sine');
+            msTone(990, 0.16, 0.12, 0.1, 'sine');
         }
 
         // ================== RodolAI ==================

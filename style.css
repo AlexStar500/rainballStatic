@@ -1256,44 +1256,66 @@ body.incognito .incognito-btn { background: #4facfe; color: white; border-color:
 }
 .rod-search-item:hover { text-decoration: underline; }
 
-/* ---------- Messenger ---------- */
-.ms-page { max-width: 960px; margin: 0 auto; padding: 24px 16px; min-height: 100vh; display: flex; flex-direction: column; }
-.ms-title { font-size: 24px; color: #c9d1d9; }
-.ms-unread-total { font-size: 15px; color: #3fb950; }
-.ms-login-gate { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; color: #8b949e; }
-.ms-layout { display: flex; gap: 12px; flex: 1; min-height: 60vh; }
-.ms-side { width: 280px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; }
-.ms-list { flex: 1; overflow-y: auto; background: #161b22; border: 1px solid #2b3139; border-radius: 10px; padding: 6px; display: flex; flex-direction: column; gap: 4px; max-height: calc(100vh - 240px); }
-.ms-item { padding: 9px 10px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; position: relative; }
-.ms-item:hover { background: #1c2128; }
-.ms-item-active { background: #1c2128; border-color: #30363d; }
-.ms-item-top { display: flex; justify-content: space-between; gap: 8px; }
-.ms-item-name { font-size: 14px; color: #c9d1d9; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ms-item-time { font-size: 11px; color: #8b949e; flex-shrink: 0; }
-.ms-item-last { font-size: 13px; color: #8b949e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
-.ms-item-unread .ms-item-last { color: #c9d1d9; }
-.ms-badge { position: absolute; top: 8px; right: 8px; background: #1f6feb; color: #fff; border-radius: 10px; font-size: 11px; min-width: 18px; height: 18px; line-height: 18px; text-align: center; padding: 0 5px; }
-.ms-none { color: #8b949e; font-size: 13px; padding: 16px; text-align: center; }
-.ms-results { display: flex; flex-direction: column; gap: 2px; background: #161b22; border: 1px solid #2b3139; border-radius: 10px; overflow-y: auto; max-height: 180px; }
+/* ---------- Messenger (ORION-style, Rainball theme) ---------- */
+.ms-page { position: fixed; inset: 0; background: #04070f; color: #fff; display: flex; z-index: 90; font-family: 'Segoe UI', 'Consolas', sans-serif; }
+.ms-sidebar { width: 280px; background: #070b16; border-right: 1px solid #1a2436; display: flex; flex-direction: column; flex-shrink: 0; }
+.ms-user-bar { padding: 14px 16px; border-bottom: 1px solid #1a2436; display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 15px; color: #e6edf3; }
+.ms-mini-avatar { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; border: 1px solid #2b3139; }
+.ms-user-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ms-exit { text-decoration: none; color: #ff4b5c; font-size: 15px; padding: 4px 9px; border: 1px solid #3a2a2e; border-radius: 7px; }
+.ms-exit:hover { background: #ff4b5c; color: #fff; }
+.ms-search-box { padding: 12px; border-bottom: 1px solid #1a2436; position: relative; display: flex; flex-direction: column; gap: 6px; }
+.ms-search-row { display: flex; gap: 6px; }
+.ms-search-row input { flex: 1; min-width: 0; background: #0b1220; border: 1px solid #223047; color: #e6edf3; padding: 9px 12px; border-radius: 10px; outline: none; font-size: 14px; }
+.ms-search-row input:focus { border-color: #4facfe; box-shadow: 0 0 0 1px #4facfe; }
+.ms-search-row button { background: #131c2e; color: #4facfe; border: 1px solid #24335a; border-radius: 10px; cursor: pointer; padding: 0 14px; font-size: 16px; }
+.ms-search-row button:hover { border-color: #4facfe; color: #fff; background: #4facfe; }
+.ms-results { position: absolute; top: 52px; left: 12px; right: 12px; background: #0a101e; border: 1px solid #24335a; border-radius: 10px; overflow-y: auto; max-height: 200px; z-index: 5; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
 .ms-results:empty { display: none; }
-.ms-result { padding: 8px 12px; cursor: pointer; font-size: 14px; color: #58a6ff; }
-.ms-result:hover { background: #1c2128; }
-.ms-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-.ms-chat { flex: 1; overflow-y: auto; background: #161b22; border: 1px solid #2b3139; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 300px); min-height: 300px; }
-.ms-chat-head { font-size: 14px; color: #8b949e; border-bottom: 1px solid #2b3139; padding-bottom: 8px; margin-bottom: 4px; }
-.ms-msg { max-width: 78%; display: flex; flex-direction: column; }
-.ms-msg-mine { align-self: flex-end; align-items: flex-end; }
-.ms-msg-theirs { align-self: flex-start; align-items: flex-start; }
-.ms-msg-text { padding: 8px 13px; border-radius: 12px; font-size: 14px; line-height: 1.45; word-break: break-word; overflow-wrap: anywhere; }
-.ms-msg-mine .ms-msg-text { background: #1f6feb; color: #fff; border-bottom-right-radius: 4px; }
-.ms-msg-theirs .ms-msg-text { background: #1c2128; border: 1px solid #2b3139; border-bottom-left-radius: 4px; color: #c9d1d9; }
-.ms-msg-time { font-size: 10px; color: #8b949e; margin-top: 3px; }
-.ms-input-row { display: flex; gap: 8px; margin-top: 8px; }
-.ms-input-row .auth-input { flex: 1; min-width: 0; }
-.ms-input-row .auth-btn-primary { min-width: 46px; }
+.ms-result { padding: 9px 12px; cursor: pointer; font-size: 14px; color: #b7c4d8; display: flex; align-items: center; gap: 8px; }
+.ms-result:hover { background: #131c2e; color: #fff; }
+.ms-contacts { flex: 1; overflow-y: auto; padding: 6px 0; }
+.ms-contacts .item { padding: 11px 16px; cursor: pointer; color: #9aa7bd; transition: background 0.15s; border-left: 3px solid transparent; }
+.ms-contacts .item:hover { background: #0a101e; color: #fff; }
+.ms-contacts .item.active { background: #0d1526; color: #fff; border-left: 3px solid #4facfe; }
+.ms-contacts .item-row { display: flex; align-items: center; gap: 8px; }
+.item-ava { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+.item-name { flex: 1; font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-last { font-size: 12px; color: #6b7a92; margin: 2px 0 0 32px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ms-unread { background: #4facfe; color: #fff; border-radius: 12px; font-size: 11px; min-width: 20px; height: 20px; line-height: 20px; text-align: center; padding: 0 6px; font-weight: 700; box-shadow: 0 0 10px rgba(79, 172, 254, 0.5); }
+.ms-main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; }
+.ms-chat-header { padding: 14px 20px; background: #070b16; border-bottom: 1px solid #1a2436; font-size: 16px; font-weight: 700; color: #e6edf3; display: flex; align-items: center; gap: 8px; }
+.ms-messages { flex: 1; padding: 22px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+.ms-messages .message { max-width: 78%; padding: 10px 15px; background: #0d1526; border-radius: 12px; border-bottom-left-radius: 3px; border: 1px solid #223047; align-self: flex-start; }
+.ms-messages .message.mine { align-self: flex-end; background: linear-gradient(135deg, #1d4ed8, #4facfe); border: none; border-bottom-right-radius: 3px; border-bottom-left-radius: 12px; box-shadow: 0 4px 18px rgba(79, 172, 254, 0.25); }
+.ms-messages .message small { display: block; font-size: 11px; color: #6b7a92; margin-bottom: 4px; }
+.ms-messages .message.mine small { color: rgba(255, 255, 255, 0.75); }
+.ms-messages .message p { margin: 0; word-break: break-word; font-size: 14px; line-height: 1.45; }
+.ms-emoji-panel { display: none; position: absolute; bottom: 74px; left: 20px; background: #0a101e; border: 1px solid #223047; padding: 10px; border-radius: 12px; box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.4); max-width: 300px; z-index: 6; flex-wrap: wrap; gap: 4px; }
+.ms-emoji-panel span { cursor: pointer; font-size: 20px; padding: 2px; transition: transform 0.15s; }
+.ms-emoji-panel span:hover { transform: scale(1.3); }
+.ms-input-box { padding: 14px 18px; background: #070b16; border-top: 1px solid #1a2436; display: none; gap: 10px; align-items: center; }
+.ms-input-box input { flex: 1; min-width: 0; padding: 12px 16px; border-radius: 24px; border: 1px solid #223047; background: #0b1220; color: #fff; outline: none; font-size: 14px; }
+.ms-input-box input:focus { border-color: #4facfe; box-shadow: 0 0 0 1px #4facfe; }
+.ms-input-box button { width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer; font-size: 17px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
+.ms-emoji-btn { background: #131c2e; color: #9aa7bd; border: 1px solid #223047; }
+.ms-emoji-btn:hover { border-color: #4facfe; }
+.ms-send-btn { background: linear-gradient(135deg, #1d4ed8, #4facfe); color: #fff; box-shadow: 0 4px 16px rgba(79, 172, 254, 0.4); }
+.ms-send-btn:hover { filter: brightness(1.1); }
+.ms-none { color: #5a6a82; font-size: 13px; text-align: center; padding: 14px; }
+.ms-auth-page { justify-content: center; align-items: center; }
+.ms-auth-card { width: 340px; text-align: center; padding: 40px 32px; border: 1px solid #4facfe; box-shadow: 0 0 40px rgba(79, 172, 254, 0.15); border-radius: 14px; background: #070b16; }
+.ms-auth-logo { margin-bottom: 6px; }
+.ms-auth-logo-img { width: 56px; height: 56px; border-radius: 14px; }
+.ms-title-glow { font-size: 34px; margin: 10px 0 4px; background: linear-gradient(90deg, #4facfe, #00f2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.ms-auth-sub { letter-spacing: 6px; font-size: 12px; color: #5a6a82; margin: 0 0 18px; }
+.ms-auth-msg { color: #9aa7bd; font-size: 14px; margin-bottom: 18px; }
+.ms-btn-p { width: 100%; padding: 13px; border: none; cursor: pointer; font-weight: 700; background: linear-gradient(135deg, #1d4ed8, #4facfe); color: #fff; border-radius: 10px; font-size: 15px; }
+.ms-btn-p:hover { filter: brightness(1.1); }
+.ms-auth-back { margin-top: 12px; }
 @media (max-width: 768px) {
-    .ms-layout { flex-direction: column; }
-    .ms-side { width: 100%; }
-    .ms-list { max-height: 180px; }
-    .ms-chat { max-height: calc(100vh - 420px); min-height: 260px; }
+    .ms-page { flex-direction: column; }
+    .ms-sidebar { width: 100%; max-height: 42vh; flex-shrink: 0; border-right: none; border-bottom: 1px solid #1a2436; }
+    .ms-contacts { max-height: 26vh; }
+    .ms-messages { padding: 14px; }
 }
