@@ -1256,128 +1256,117 @@ body.incognito .incognito-btn { background: #4facfe; color: white; border-color:
 }
 .rod-search-item:hover { text-decoration: underline; }
 
-/* ---------- Messenger (ORION-PORT, Rainball theme) ---------- */
-#ms-screen { position: fixed; inset: 0; background: #04070f; color: #fff; font-family: 'Segoe UI', 'Consolas', monospace; z-index: 90; display: flex; overflow: hidden; }
-#ms-screen * { box-sizing: border-box; margin: 0; padding: 0; }
-#ms-screen #ms-auth-screen { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; background: rgba(2, 4, 10, 0.96); z-index: 5; }
+/* ---------- Messenger (ORION design, Rainball blue) ---------- */
+#ms-screen { position: fixed; inset: 0; background: #050505; color: #fff; font-family: 'Segoe UI', 'Consolas', sans-serif; z-index: 90; display: flex; overflow: hidden; }
+#ms-screen * { box-sizing: border-box; }
+#ms-screen .verified { color: #00f2fe; font-weight: bold; text-shadow: 0 0 5px #00f2fe; margin-left: 5px; }
+#ms-screen #ms-auth-screen { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.95); z-index: 5; }
 #ms-screen #ms-auth-screen.on { display: flex; }
-#ms-screen #ms-app { display: none; flex: 1; min-width: 0; }
+#ms-screen .auth-card { width: 320px; text-align: center; padding: 40px; background: #111; border: 1px solid #4facfe; border-radius: 10px; box-shadow: 0 0 30px rgba(79, 172, 254, 0.2); }
+#ms-screen .ms-logo { margin-bottom: 6px; }
+#ms-screen .ms-logo-img { width: 64px; height: 64px; }
+#ms-screen .auth-card h1 { font-size: 3rem; margin-bottom: 20px; background: linear-gradient(90deg, #00f2fe, #4facfe); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+#ms-screen .auth-card input { width: 100%; padding: 10px; margin: 5px 0; background: #222; border: 1px solid #555; color: #fff; text-align: center; outline: none; }
+#ms-screen #ms-app { display: none; width: 100%; height: 100%; background: #050505; position: relative; }
 #ms-screen #ms-app.on { display: flex; }
-#ms-screen .auth-card { width: 340px; text-align: center; padding: 40px 32px; background: #0b1220; border: 1px solid #4facfe; border-radius: 12px; box-shadow: 0 0 40px rgba(79, 172, 254, 0.2); }
-#ms-screen .ms-logo { margin-bottom: 8px; }
-#ms-screen .ms-logo-img { width: 56px; height: 56px; border-radius: 14px; }
-#ms-screen .glitch { font-size: 40px; font-weight: 900; letter-spacing: 3px; margin: 10px 0 22px; background: linear-gradient(90deg, #4facfe, #00f2fe, #4facfe); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: msGlow 3s linear infinite; }
-#ms-screen h1 { font-family: 'Segoe UI', 'Consolas', monospace; }
-#ms-screen h3 { margin-bottom: 12px; color: #e6edf3; }
-#ms-screen input[type=text], #ms-screen input[type=password] { width: 100%; padding: 12px; margin: 6px 0; background: #04070f; border: 1px solid #223047; border-radius: 8px; color: #fff; text-align: center; outline: none; font-size: 14px; }
-#ms-screen input:focus { border-color: #4facfe; box-shadow: 0 0 0 1px #4facfe; }
-#ms-screen .btn-p { width: 100%; padding: 13px; margin-top: 12px; border: none; border-radius: 8px; font-weight: 800; font-size: 15px; cursor: pointer; background: linear-gradient(135deg, #1d4ed8, #4facfe); color: #fff; }
-#ms-screen .btn-p:hover { filter: brightness(1.12); }
-#ms-screen .btn-s { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid #4facfe; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; background: transparent; color: #4facfe; }
-#ms-screen .btn-s:hover { background: rgba(79, 172, 254, 0.12); }
-#ms-screen .sidebar { width: 280px; background: #070b16; border-right: 1px solid #1a2436; display: flex; flex-direction: column; flex-shrink: 0; }
-#ms-screen .user-bar { padding: 14px 16px; border-bottom: 1px solid #1a2436; display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 15px; color: #e6edf3; }
-#ms-screen .ms-mini-avatar { width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; border: 1px solid #2b3139; }
+#ms-screen .btn-p, #ms-screen .btn-s { width: 100%; padding: 12px; margin-top: 10px; border: none; cursor: pointer; font-weight: bold; }
+#ms-screen .btn-p { background: #4facfe; color: #fff; }
+#ms-screen .btn-s { background: transparent; border: 1px solid #4facfe; color: #4facfe; }
+#ms-screen .btn-p:hover { filter: brightness(1.1); }
+#ms-screen .btn-s:hover { background: rgba(79, 172, 254, 0.1); }
+#ms-screen .sidebar { width: 260px; background: #080808; border-right: 1px solid #333; display: flex; flex-direction: column; flex-shrink: 0; }
+#ms-screen .user-bar { padding: 15px; border-bottom: 1px solid #333; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: bold; font-size: 1.1rem; }
+#ms-screen .ms-mini-avatar { width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
 #ms-screen #ms-display-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#ms-screen .exit-btn { color: #ff4b5c; font-size: 14px; padding: 4px 9px; background: transparent; border: 1px solid #3a2a2e; border-radius: 7px; cursor: pointer; }
-#ms-screen .exit-btn:hover { background: #ff4b5c; color: #fff; }
-#ms-screen .search-box { padding: 12px; border-bottom: 1px solid #1a2436; }
-#ms-screen .search-row { display: flex; gap: 6px; }
-#ms-screen .search-row input { flex: 1; min-width: 0; background: #0b1220; border: 1px solid #223047; color: #e6edf3; padding: 9px 12px; border-radius: 10px; outline: none; font-size: 14px; }
-#ms-screen .search-row input:focus { border-color: #4facfe; }
-#ms-screen .search-row button { background: #131c2e; color: #4facfe; border: 1px solid #24335a; border-radius: 10px; cursor: pointer; padding: 0 14px; font-size: 16px; }
-#ms-screen .search-row button:hover { border-color: #4facfe; color: #fff; background: #4facfe; }
-#ms-screen .ms-actions { padding: 10px 12px; border-bottom: 1px solid #1a2436; display: flex; flex-direction: column; gap: 6px; }
-#ms-screen .ms-actions .btn-s { margin-top: 0; font-size: 11.5px; padding: 8px; letter-spacing: 0.5px; }
-#ms-screen .contacts { flex: 1; overflow-y: auto; padding: 6px 0; }
-#ms-screen .item { padding: 12px 16px; cursor: pointer; color: #9aa7bd; transition: background 0.15s; border-left: 3px solid transparent; position: relative; font-size: 14px; }
-#ms-screen .item:hover { background: #0a101e; color: #fff; }
-#ms-screen .item.active { background: #0d1526; color: #fff; border-left: 3px solid #4facfe; }
-#ms-screen .verified { color: #00f2fe; font-weight: 800; }
-#ms-screen .ms-unread { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: #4facfe; color: #fff; border-radius: 12px; font-size: 11px; min-width: 20px; height: 20px; line-height: 20px; text-align: center; padding: 0 6px; font-weight: 700; }
-#ms-screen .chat { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; }
-#ms-screen .chat-header { padding: 14px 20px; background: #070b16; border-bottom: 1px solid #1a2436; font-size: 17px; font-weight: 700; color: #e6edf3; display: flex; align-items: center; justify-content: space-between; }
-#ms-screen #chat-with { text-shadow: 0 0 12px rgba(79, 172, 254, 0.35); }
-#ms-screen .call-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #00f2fe; background: transparent; color: #00f2fe; font-size: 17px; cursor: pointer; }
-#ms-screen .call-btn:hover { background: #00f2fe; color: #04070f; box-shadow: 0 0 20px rgba(0, 242, 254, 0.5); }
-#ms-screen #messages-container { flex: 1; padding: 22px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
-#ms-screen .message { max-width: 82%; padding: 10px 15px; background: #0d1526; border-radius: 12px; border-bottom-left-radius: 3px; border: 1px solid #223047; align-self: flex-start; }
-#ms-screen .message.mine { align-self: flex-end; background: linear-gradient(135deg, #1d4ed8, #4facfe); border: none; border-bottom-right-radius: 3px; border-bottom-left-radius: 12px; box-shadow: 0 4px 18px rgba(79, 172, 254, 0.3); }
-#ms-screen .message small { display: block; font-size: 11px; color: #6b7a92; margin-bottom: 5px; word-break: break-all; }
-#ms-screen .message.mine small { color: rgba(255, 255, 255, 0.8); }
-#ms-screen .message p { margin: 0; word-break: break-word; font-size: 14px; line-height: 1.45; }
-#ms-screen .ms-edited { opacity: 0.7; font-style: italic; }
-#ms-screen .ms-del { cursor: pointer; color: #ff4b5c; font-weight: 700; margin-left: 4px; }
-#ms-screen .ms-del:hover { color: #ff8591; }
-#ms-screen .file-link { display: block; margin-top: 6px; padding: 10px; background: #0b1220; border: 1px solid #24335a; border-radius: 8px; color: #00f2fe; text-decoration: none; text-align: center; font-size: 13px; word-break: break-all; }
-#ms-screen .file-link:hover { border-color: #00f2fe; }
-#ms-screen .media-img { max-width: 100%; max-height: 300px; margin-top: 6px; border-radius: 8px; border: 1px solid #223047; }
-#ms-screen .media-card { margin-top: 6px; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; font-size: 13px; transition: 0.2s; }
-#ms-screen .media-card small { display: block; color: #6b7a92; margin-top: 4px; }
-#ms-screen .media-card.audio { border: 1px solid #00f2fe; color: #00f2fe; box-shadow: 0 0 14px rgba(0, 242, 254, 0.25); }
-#ms-screen .media-card.audio:hover { background: rgba(0, 242, 254, 0.12); }
-#ms-screen .media-card.video { border: 1px solid #4facfe; color: #4facfe; box-shadow: 0 0 14px rgba(79, 172, 254, 0.25); }
-#ms-screen .media-card.video:hover { background: rgba(79, 172, 254, 0.12); }
-#ms-screen #emoji-panel { display: none; position: absolute; bottom: 76px; left: 18px; background: #0a101e; border: 1px solid #223047; padding: 10px; border-radius: 12px; box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.5); max-width: 310px; z-index: 6; flex-wrap: wrap; gap: 4px; }
-#ms-screen #emoji-panel span { cursor: pointer; font-size: 20px; padding: 3px; transition: transform 0.15s; }
-#ms-screen #emoji-panel span:hover { transform: scale(1.3); }
-#ms-screen .input-box { padding: 14px 18px; background: #070b16; border-top: 1px solid #1a2436; display: flex; gap: 10px; align-items: center; }
-#ms-screen .input-box input[type=text] { flex: 1; min-width: 0; padding: 12px 16px; border-radius: 24px; border: 1px solid #223047; background: #0b1220; color: #fff; outline: none; font-size: 14px; }
-#ms-screen .input-box input[type=text]:focus { border-color: #4facfe; box-shadow: 0 0 0 1px #4facfe; }
-#ms-screen .input-box button { width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer; font-size: 17px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
-#ms-screen .attach-btn, #ms-screen .emoji-btn { background: #131c2e; color: #9aa7bd; border: 1px solid #223047; }
-#ms-screen .attach-btn:hover, #ms-screen .emoji-btn:hover { border-color: #4facfe; }
-#ms-screen .send-btn { background: linear-gradient(135deg, #1d4ed8, #4facfe); color: #fff; box-shadow: 0 4px 16px rgba(79, 172, 254, 0.4); }
+#ms-screen .exit-btn { background: #ff0044; border: none; color: white; border-radius: 5px; cursor: pointer; padding: 5px 10px; }
+#ms-screen .exit-btn:hover { filter: brightness(1.15); }
+#ms-screen .search-box { padding: 10px; display: flex; flex-direction: column; gap: 5px; border-bottom: 1px solid #333; }
+#ms-screen .search-row { display: flex; gap: 5px; }
+#ms-screen .search-row input { flex: 1; min-width: 0; background: #111; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 4px; outline: none; }
+#ms-screen .search-row button { background: #333; color: #fff; border: none; cursor: pointer; padding: 0 10px; border-radius: 4px; }
+#ms-screen .ms-actions { padding: 10px; display: flex; gap: 5px; border-bottom: 1px solid #333; }
+#ms-screen .ms-actions .btn-s { flex: 1; width: auto; margin-top: 0; padding: 5px; font-size: 10px; }
+#ms-screen .contacts { flex: 1; overflow-y: auto; }
+#ms-screen .item { padding: 12px 15px; cursor: pointer; color: #aaa; transition: 0.2s; border-left: 3px solid transparent; position: relative; }
+#ms-screen .item:hover { background: #111; color: #fff; }
+#ms-screen .item.active { background: #1a1a1a; color: #fff; border-left: 3px solid #4facfe; }
+#ms-screen .ms-unread { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: #4facfe; color: #fff; border-radius: 10px; font-size: 11px; min-width: 18px; text-align: center; padding: 2px 6px; font-weight: 700; }
+#ms-screen .chat { flex: 1; min-width: 0; display: flex; flex-direction: column; background: #000; position: relative; }
+#ms-screen .chat-header { padding: 15px; background: #080808; border-bottom: 1px solid #333; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+#ms-screen .call-btn { background: transparent; border: 1px solid #00f2fe; color: #00f2fe; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; }
+#ms-screen #messages-container { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+#ms-screen .message { max-width: 85%; padding: 10px 15px; background: #111; border-radius: 10px; border-bottom-left-radius: 2px; border: 1px solid #333; align-self: flex-start; position: relative; }
+#ms-screen .message.mine { align-self: flex-end; background: linear-gradient(135deg, #0044cc, #0088ff); border: none; border-bottom-right-radius: 2px; border-bottom-left-radius: 10px; }
+#ms-screen .message.system { align-self: center; background: #220000; border: 1px solid #ff0000; max-width: 90%; text-align: center; }
+#ms-screen .message small { display: block; font-size: 0.75rem; color: #888; margin-bottom: 5px; }
+#ms-screen .message.mine small { color: #ccc; }
+#ms-screen .message p { margin: 0; word-break: break-word; font-size: 1rem; }
+#ms-screen .ms-del { cursor: pointer; color: #ff0044; font-weight: 700; margin-left: 4px; }
+#ms-screen .ms-edited { color: #888; font-size: 0.7rem; }
+#ms-screen .file-link { display: block; background: #222; padding: 10px; margin-top: 5px; color: #00f2fe; text-decoration: none; border-radius: 5px; text-align: center; word-break: break-all; }
+#ms-screen .media-img { max-width: 100%; max-height: 300px; border-radius: 5px; border: 1px solid #333; margin-top: 5px; }
+#ms-screen .media-card { display: inline-block; padding: 15px; border-radius: 5px; margin-top: 5px; cursor: pointer; transition: 0.2s; text-align: center; min-width: 200px; }
+#ms-screen .media-card.video { background: #111; border: 1px solid #4facfe; color: #4facfe; }
+#ms-screen .media-card.video:hover { background: #4facfe; color: #fff; box-shadow: 0 0 15px #4facfe; }
+#ms-screen .media-card.audio { background: #111; border: 1px solid #00f2fe; color: #00f2fe; }
+#ms-screen .media-card.audio:hover { background: #00f2fe; color: #000; box-shadow: 0 0 15px #00f2fe; }
+#ms-screen .media-card small { display: block; margin-top: 5px; font-size: 0.7em; color: #aaa; word-break: break-all; }
+#ms-screen #emoji-panel { display: none; position: absolute; bottom: 70px; left: 15px; background: #1a1a1a; border: 1px solid #333; padding: 10px; border-radius: 10px; box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3); max-width: 250px; z-index: 6; flex-wrap: wrap; }
+#ms-screen #emoji-panel span { cursor: pointer; font-size: 1.5rem; transition: transform 0.2s; display: inline-block; padding: 2px; }
+#ms-screen #emoji-panel span:hover { transform: scale(1.2); }
+#ms-screen .input-box { padding: 15px; background: #080808; border-top: 1px solid #333; display: flex; gap: 10px; align-items: center; }
+#ms-screen .input-box input[type=text] { flex: 1; min-width: 0; padding: 12px; border-radius: 20px; border: 1px solid #444; background: #111; color: #fff; outline: none; }
+#ms-screen .input-box button { width: 45px; height: 45px; border-radius: 50%; border: none; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+#ms-screen .attach-btn, #ms-screen .emoji-btn { background: #222; color: #aaa; }
+#ms-screen .send-btn { background: #4facfe; color: #fff; }
 #ms-screen .send-btn:hover { filter: brightness(1.1); }
-#ms-screen .modal-overlay { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; background: rgba(1, 2, 6, 0.82); z-index: 100; }
+#ms-screen .modal-overlay { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.8); z-index: 100; }
 #ms-screen .modal-overlay.on { display: flex; }
-#ms-screen .modal { width: 320px; padding: 24px; background: #0b1220; border: 1px solid #4facfe; border-radius: 10px; text-align: center; box-shadow: 0 0 40px rgba(79, 172, 254, 0.2); }
-#ms-screen .modal input { width: 100%; padding: 10px; margin: 10px 0 4px; background: #04070f; border: 1px solid #223047; border-radius: 8px; color: #fff; text-align: center; outline: none; }
-#ms-screen .ms-room-item { padding: 10px 12px; cursor: pointer; color: #b7c4d8; border-bottom: 1px solid #121a2b; font-size: 14px; }
-#ms-screen .ms-room-item:hover { background: #131c2e; color: #fff; }
-#ms-screen .ms-room-item small { color: #6b7a92; }
-#ms-screen .call-modal { width: 340px; padding: 30px; background: rgba(7, 9, 17, 0.96); border: 1px solid #00f2fe; border-radius: 12px; text-align: center; box-shadow: 0 0 40px rgba(0, 242, 254, 0.25); }
-#ms-screen .call-modal h3 { color: #fff; text-shadow: 0 0 14px #00f2fe; }
-#ms-screen #caller-id { margin: 12px 0 20px; color: #e6edf3; line-height: 1.5; }
-#ms-screen .call-buttons { display: flex; justify-content: center; gap: 16px; }
-#ms-screen .call-buttons button { width: 110px; padding: 11px; border: none; border-radius: 6px; font-size: 14px; font-weight: 800; color: #fff; cursor: pointer; }
-#ms-screen #btn-accept { background: #00c853; }
-#ms-screen #btn-accept:hover { box-shadow: 0 0 18px rgba(0, 200, 83, 0.7); }
-#ms-screen #btn-decline { background: #d50000; }
-#ms-screen #btn-decline:hover { box-shadow: 0 0 18px rgba(213, 0, 0, 0.7); }
-@keyframes msGlow {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
-}
+#ms-screen .modal { width: 300px; padding: 20px; background: #111; border: 1px solid #4facfe; text-align: center; }
+#ms-screen .modal input { width: 100%; padding: 10px; margin: 10px 0; background: #000; border: 1px solid #333; color: white; outline: none; }
+#ms-screen .ms-room-item { padding: 10px 12px; cursor: pointer; color: #aaa; border-bottom: 1px solid #222; }
+#ms-screen .ms-room-item:hover { background: #1a1a1a; color: #fff; }
+#ms-screen .ms-room-item small { color: #666; }
+#ms-screen #incoming-call-modal { z-index: 1000; }
+#ms-screen .call-modal { width: 320px; padding: 30px; background: rgba(10, 10, 10, 0.95); border: 1px solid #00f2fe; box-shadow: 0 0 30px rgba(0, 242, 254, 0.2); text-align: center; border-radius: 10px; backdrop-filter: blur(10px); }
+#ms-screen .call-modal h3 { margin-top: 0; font-size: 1.5rem; color: #fff; text-shadow: 0 0 10px #00f2fe; }
+#ms-screen #caller-id { font-size: 1.1rem; margin: 8px 0; }
+#ms-screen .call-buttons { display: flex; justify-content: space-around; margin-top: 20px; }
+#ms-screen .call-buttons button { width: 100px; padding: 10px; font-size: 1rem; border: none; border-radius: 4px; cursor: pointer; }
+#ms-screen #btn-accept { background-color: #00c853; color: white; }
+#ms-screen #btn-decline { background-color: #d50000; color: white; }
 
-/* ---- Окно звонка ---- */
-#ms-call { position: fixed; inset: 0; background: #02040a; color: #fff; font-family: 'Consolas', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-#ms-call #st { font-size: 22px; font-weight: 800; text-align: center; letter-spacing: 2px; padding: 20px; }
-#ms-call #c-info { color: #9aa7bd; font-size: 13px; text-align: center; }
-#ms-call #c-visual { width: 90%; max-width: 560px; text-align: center; min-height: 60px; }
-#ms-call #lineW { width: 90%; max-width: 420px; margin: 20px 0; }
+/* ---- Окно звонка (Orion call.html, rainball blue) ---- */
+#ms-call { position: fixed; inset: 0; background: #000; color: #4facfe; text-align: center; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+#ms-call #st, #ms-call .call-status { font-size: 1.6rem; font-weight: 800; padding: 16px; }
+#ms-call #c-info { color: #4facfe; font-size: 13px; margin-bottom: 6px; }
+#ms-call #c-visual { width: 90%; max-width: 800px; }
+#ms-call video { width: 100%; max-width: 800px; border: 1px solid #333; background: #111; }
+#ms-call #lineW { width: 90%; max-width: 420px; margin: 14px 0; }
 #ms-call .lineContainer { display: flex; align-items: center; gap: 10px; margin: 8px 0; color: #4facfe; font-size: 12px; }
 #ms-call .lineContainer input[type=range] { flex: 1; accent-color: #4facfe; }
-#ms-call #call-buttons { display: flex; gap: 18px; margin-top: 10px; flex-wrap: wrap; justify-content: center; }
-#ms-call .call-btn-grp { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-#ms-call .call-btn-grp label { color: #9aa7bd; font-size: 11px; letter-spacing: 1px; }
-#ms-call .cb { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #223047; background: #0b1220; color: #9aa7bd; font-size: 22px; cursor: pointer; transition: 0.2s; }
-#ms-call .cb.on { border-color: #4facfe; color: #4facfe; box-shadow: 0 0 16px rgba(79, 172, 254, 0.4); }
-#ms-call .cb.hang { border-color: #d50000; color: #d50000; }
-#ms-call .cb:hover { transform: scale(1.08); }
-#ms-call .call-status { padding: 40px; font-size: 18px; }
-#ms-call .pl-close { position: absolute; top: 15px; right: 15px; padding: 9px 18px; background: #1d4ed8; color: #fff; border: none; border-radius: 6px; cursor: pointer; z-index: 99; font-weight: 700; }
+#ms-call #call-buttons { display: flex; gap: 10px; margin-top: 10px; background: #111; padding: 10px; border-radius: 5px; border: 1px solid #333; flex-wrap: wrap; justify-content: center; }
+#ms-call .call-btn-grp { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+#ms-call .call-btn-grp label { color: #888; font-size: 10px; letter-spacing: 1px; }
+#ms-call .cb { min-width: 40px; padding: 10px; border-radius: 0; border: 1px solid #4facfe; background: #000; color: #4facfe; font-weight: bold; font-size: 16px; cursor: pointer; }
+#ms-call .cb:hover { background: #4facfe; color: #000; }
+#ms-call .cb.on { background: #4facfe; color: #000; }
+#ms-call .cb.hang { border-color: #f00; color: #f00; }
+#ms-call .cb.hang:hover { background: #f00; color: #fff; }
+#ms-call .pl-close { position: absolute; top: 15px; right: 15px; padding: 9px 18px; background: #000; color: #4facfe; border: 1px solid #4facfe; border-radius: 4px; cursor: pointer; font-weight: bold; }
+#ms-call .pl-close:hover { background: #4facfe; color: #000; }
 
-/* ---- Медиа плеер ---- */
-#ms-player { position: fixed; inset: 0; background: #02040a; color: #fff; font-family: 'Consolas', monospace; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-#ms-player .pl-close { position: absolute; top: 15px; right: 15px; padding: 9px 18px; background: #1d4ed8; color: #fff; border: none; border-radius: 6px; cursor: pointer; z-index: 99; font-weight: 700; }
-#ms-player .pl-close:hover { filter: brightness(1.15); }
-#ms-player .pl-audio { text-align: center; }
-#ms-player .pl-title { font-size: 20px; margin-bottom: 18px; color: #00f2fe; text-shadow: 0 0 12px rgba(0, 242, 254, 0.4); }
+/* ---- Медиа плеер (Orion media.html, rainball blue) ---- */
+#ms-player { position: fixed; inset: 0; background: #000; color: #00f2fe; font-family: 'Segoe UI', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+#ms-player .pl-audio { display: flex; flex-direction: column; align-items: center; width: 100%; }
+#ms-player .pl-title { font-size: 1.5rem; text-shadow: 0 0 10px #4facfe; margin-bottom: 20px; word-break: break-all; padding: 20px; text-align: center; }
+#ms-player video, #ms-player audio { width: 90%; max-width: 800px; border: 1px solid #4facfe; box-shadow: 0 0 20px rgba(79, 172, 254, 0.2); border-radius: 5px; outline: none; }
+#ms-player .pl-close { position: absolute; top: 20px; right: 20px; background: transparent; border: 1px solid #ff4444; color: #ff4444; padding: 10px 30px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+#ms-player .pl-close:hover { background: #ff4444; color: #fff; box-shadow: 0 0 10px #ff4444; }
 
 @media (max-width: 768px) {
     #ms-screen #ms-app.on { flex-direction: column; }
-    #ms-screen .sidebar { width: 100%; max-height: 40vh; border-right: none; border-bottom: 1px solid #1a2436; }
+    #ms-screen .sidebar { width: 100%; max-height: 40vh; border-right: none; border-bottom: 1px solid #333; }
     #ms-screen .contacts { max-height: 22vh; }
     #ms-screen #messages-container { padding: 14px; }
     #ms-screen .message { max-width: 92%; }
