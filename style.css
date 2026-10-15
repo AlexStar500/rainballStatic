@@ -1409,6 +1409,9 @@ body.incognito .incognito-btn { background: #4facfe; color: white; border-color:
 #ms-screen .ms-room-item { display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; color: #fff; border-radius: 8px; font-size: 14px; }
 #ms-screen .ms-room-item:hover { background: var(--tg-hover); }
 #ms-screen .ms-room-item small { color: var(--tg-muted); }
+#ms-screen .ms-user-info { display: flex; flex-direction: column; min-width: 0; }
+#ms-screen .ms-user-name { color: #fff; font-size: 14px; }
+#ms-screen .ms-user-email { color: var(--tg-accent); font-size: 12px; word-break: break-all; }
 #ms-screen .report-list { display: flex; flex-direction: column; gap: 6px; }
 #ms-screen .report-item { display: flex; gap: 12px; padding: 10px 12px; border-radius: 10px; background: var(--tg-panel); cursor: pointer; align-items: flex-start; }
 #ms-screen .report-item:hover { background: var(--tg-hover); }

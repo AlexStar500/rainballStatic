@@ -3065,7 +3065,7 @@ json body = {{"client_id","ID"},{"code",code},
                         <div class="ms-logo"><img src="/logo.png" class="ms-logo-img" alt="Rainball"></div>
                         <h1 class="glitch">Rainball</h1>
                         <p class="auth-sub">Sign in to continue</p>
-                        <input type="text" id="ms-email" placeholder="Username or email" autocomplete="off" maxlength="120">
+                        <input type="text" id="ms-email" placeholder="Email" autocomplete="off" maxlength="120">
                         <input type="password" id="ms-pass" placeholder="Password" autocomplete="off" maxlength="120">
                         <button onclick="msAuth('login')" class="btn-p">SIGN IN</button>
                         <button onclick="msAuth('register')" class="btn-s">CREATE ACCOUNT</button>
@@ -3077,7 +3077,7 @@ json body = {{"client_id","ID"},{"code",code},
                             <button class="icon-btn" onclick="openMsModal('m-menu')" title="Menu"><span class="ms-ico ico-menu"></span></button>
                             <div class="side-search">
                                 <span class="ms-ico ico-search side-search-ico"></span>
-                                <input type="text" id="new-contact" placeholder="Search" autocomplete="off" maxlength="60">
+                                <input type="text" id="new-contact" placeholder="Search by email" autocomplete="off" maxlength="120">
                             </div>
                         </div>
                         <div class="contacts" id="contacts-list"></div>
@@ -3119,7 +3119,7 @@ json body = {{"client_id","ID"},{"code",code},
                     <button onclick="msHome()" class="menu-item"><span class="ms-ico ico-home"></span>Back to Search</button>
                     <button onclick="msLogout()" class="menu-item danger"><span class="ms-ico ico-power"></span>Log out</button>
                 </div></div>
-                <div id="m-chat" class="modal-overlay"><div class="modal"><button class="modal-x" onclick="closeMsModal()" title="Close">✕</button><h3>New Chat</h3><input type="text" id="chat-search" placeholder="Username" autocomplete="off" maxlength="60"><div id="chat-search-results" class="room-list"></div></div></div>
+                <div id="m-chat" class="modal-overlay"><div class="modal"><button class="modal-x" onclick="closeMsModal()" title="Close">✕</button><h3>New Chat</h3><input type="text" id="chat-search" placeholder="Search by email" autocomplete="off" maxlength="120"><div id="chat-search-results" class="room-list"></div></div></div>
                 <div id="m-chan" class="modal-overlay"><div class="modal"><button class="modal-x" onclick="closeMsModal()" title="Close">✕</button><h3>New Channel</h3><input type="text" id="c-name" placeholder="Channel name" autocomplete="off" maxlength="60"><button onclick="msCreateEntity('channel')" class="btn-p">CREATE</button><button onclick="closeMsModal()" class="btn-s">CANCEL</button></div></div>
                 <div id="m-group" class="modal-overlay"><div class="modal"><button class="modal-x" onclick="closeMsModal()" title="Close">✕</button><h3>New Group</h3><input type="text" id="g-name" placeholder="Group name" autocomplete="off" maxlength="60"><button onclick="msCreateEntity('group')" class="btn-p">CREATE</button><button onclick="closeMsModal()" class="btn-s">CANCEL</button></div></div>
                 <div id="m-room" class="modal-overlay"><div class="modal"><button class="modal-x" onclick="closeMsModal()" title="Close">✕</button><h3>Directory</h3><div id="room-list" class="room-list"></div><button onclick="closeMsModal()" class="btn-s">CLOSE</button></div></div>
@@ -3278,7 +3278,7 @@ json body = {{"client_id","ID"},{"code",code},
                 const r = await fetch('/api/messenger/users?q=' + encodeURIComponent(q), { headers: { 'Authorization': 'Bearer ' + authToken } });
                 const users = await r.json();
                 box.innerHTML = (users && users.length)
-                    ? users.map(u => '<div class="ms-room-item" onclick="msPickUser(\'' + u.id + '\')"><span class="item-avatar" style="' + (u.avatar_gradient || 'background:#4facfe') + ';width:34px;height:34px;font-size:16px">' + (u.avatar_emoji || '👤') + '</span>' + escapeHtml(u.username) + (msVerified(u.id) ? ' <span class="verified">✓</span>' : '') + '</div>').join('')
+                    ? users.map(u => '<div class="ms-room-item" onclick="msPickUser(\'' + u.id + '\')"><span class="item-avatar" style="' + (u.avatar_gradient || 'background:#4facfe') + ';width:34px;height:34px;font-size:16px">' + (u.avatar_emoji || '👤') + '</span><span class="ms-user-info"><span class="ms-user-name">' + escapeHtml(u.username || u.email || '') + (msVerified(u.id) ? ' <span class="verified">✓</span>' : '') + '</span>' + (u.email ? '<span class="ms-user-email">' + escapeHtml(u.email) + '</span>' : '') + '</span></div>').join('')
                     : '<div style="color:var(--tg-muted);padding:8px">Not found</div>';
             } catch (e) { box.innerHTML = '<div style="color:var(--tg-muted);padding:8px">Error</div>'; }
         }
@@ -3303,7 +3303,7 @@ json body = {{"client_id","ID"},{"code",code},
             if (!box) return;
             const app = document.getElementById('ms-app');
             if (app) app.classList.remove('no-chat');
-            if (d.meta && d.meta.kind === 'report') msSetHeader(d.meta);
+            if (d.meta && d.meta.name) msSetHeader(d.meta);
             if (d.meta && d.meta.kind === 'report' && d.meta.admin && d.reports) {
                 box.innerHTML = d.reports.length
                     ? '<div class="report-list">' + d.reports.map(r =>
@@ -3467,14 +3467,14 @@ json body = {{"client_id","ID"},{"code",code},
                 }
                 const r2 = await fetch('/api/messenger/users?q=' + encodeURIComponent(t), { headers: { 'Authorization': 'Bearer ' + authToken } });
                 const users = await r2.json();
-                const u = (users || []).find(x => String(x.username).toLowerCase() === t.toLowerCase());
+                const u = (users || []).find(x => String(x.email || '').toLowerCase() === t.toLowerCase()) || (users || []).find(x => String(x.username || '').toLowerCase() === t.toLowerCase());
                 if (u) {
                     if (nc) nc.value = '';
                     selectChat(u.id);
                 } else {
-                    alert('User Not found');
+                    alert('No user with that email');
                 }
-            } catch (e) { alert('User Not found'); }
+            } catch (e) { alert('No user with that email'); }
         }
 
         async function msCreateEntity(type) {
