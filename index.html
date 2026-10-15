@@ -3064,54 +3064,59 @@ json body = {{"client_id","ID"},{"code",code},
                     <div class="auth-card">
                         <div class="ms-logo"><img src="/logo.png" class="ms-logo-img" alt="Rainball"></div>
                         <h1 class="glitch">Rainball</h1>
-                        <input type="text" id="ms-email" placeholder="IDENTIFIER" autocomplete="off" maxlength="120">
-                        <input type="password" id="ms-pass" placeholder="ACCESS KEY" autocomplete="off" maxlength="120">
-                        <button onclick="msAuth('login')" class="btn-p">CONNECT</button>
-                        <button onclick="msAuth('register')" class="btn-s">NEW ID</button>
+                        <p class="auth-sub">Sign in to continue</p>
+                        <input type="text" id="ms-email" placeholder="Username or email" autocomplete="off" maxlength="120">
+                        <input type="password" id="ms-pass" placeholder="Password" autocomplete="off" maxlength="120">
+                        <button onclick="msAuth('login')" class="btn-p">SIGN IN</button>
+                        <button onclick="msAuth('register')" class="btn-s">CREATE ACCOUNT</button>
                     </div>
                 </div>
                 <div id="ms-app">
                     <aside class="sidebar">
-                        <div class="user-bar">
-                            <span class="ms-mini-avatar" style="background:${authUser ? (authUser.avatar_gradient || '#1c2128') : '#1c2128'}">${authUser ? (authUser.avatar_emoji || '☺') : '☺'}</span>
-                            <span id="ms-display-name">${authUser ? escapeHtml(authUser.username) : ''}</span>
-                            <button onclick="msLogout()" class="exit-btn" title="Exit">✖</button>
-                        </div>
-                        <div class="search-box">
-                            <div class="search-row">
-                                <input type="text" id="new-contact" placeholder="ID / CHANNEL" autocomplete="off" maxlength="60">
-                                <button onclick="msAddContact()">+</button>
+                        <div class="side-head">
+                            <button class="icon-btn" onclick="openMsModal('m-menu')" title="Menu"><span class="ms-ico ico-menu"></span></button>
+                            <div class="side-search">
+                                <span class="ms-ico ico-search side-search-ico"></span>
+                                <input type="text" id="new-contact" placeholder="Search" autocomplete="off" maxlength="60">
                             </div>
-                        </div>
-                        <div class="ms-actions">
-                            <button onclick="openMsModal('m-chan')" class="btn-s" title="Create channel"># NEW CHANNEL</button>
-                            <button onclick="openMsModal('m-group')" class="btn-s" title="Create group">% NEW GROUP</button>
-                            <button onclick="openMsModal('m-room')" class="btn-s" title="Directory">☰ DIRECTORY</button>
                         </div>
                         <div class="contacts" id="contacts-list"></div>
                     </aside>
                     <main class="chat">
                         <header class="chat-header">
-                            <span id="chat-with"># Global Network</span>
-                            <button onclick="msMakeCall()" class="call-btn" title="Call">📞</button>
+                            <button class="icon-btn back-btn" onclick="msBack()" title="Back"><span class="ms-ico ico-back"></span></button>
+                            <div class="peer-avatar" id="peer-av">#</div>
+                            <div class="peer-meta">
+                                <div class="peer-name" id="chat-with">Global Network</div>
+                                <div class="peer-status" id="chat-status"></div>
+                            </div>
+                            <button class="icon-btn call-btn" onclick="msMakeCall()" title="Call"><span class="ms-ico ico-call"></span></button>
                         </header>
                         <div id="messages-container"></div>
                         <div id="emoji-panel">${MS_EMOJIS.map(e => '<span onclick="msAddEmoji(\'' + e + '\')">' + e + '</span>').join('')}</div>
                         <div class="input-box">
                             <input type="file" id="ms-file-input" hidden onchange="msUploadFile()">
-                            <button onclick="document.getElementById('ms-file-input').click()" class="attach-btn" title="Attach file">📎</button>
-                            <button onclick="toggleEmojiPanel()" class="emoji-btn" title="Emoji">😀</button>
-                            <input type="text" id="msg-input" placeholder="..." autocomplete="off" maxlength="4000">
-                            <button onclick="msSendMessage()" class="send-btn" title="Send">➤</button>
+                            <button class="icon-btn attach-btn" onclick="document.getElementById('ms-file-input').click()" title="Attach"><span class="ms-ico ico-attach"></span></button>
+                            <input type="text" id="msg-input" placeholder="Message" autocomplete="off" maxlength="4000">
+                            <button class="icon-btn emoji-btn" onclick="toggleEmojiPanel()" title="Emoji"><span class="ms-ico ico-emoji"></span></button>
+                            <button class="icon-btn send-btn" onclick="msSendMessage()" title="Send"><span class="ms-ico ico-send"></span></button>
                         </div>
                     </main>
                 </div>
-                <div id="m-chan" class="modal-overlay"><div class="modal"><h3>NEW CHANNEL</h3><input type="text" id="c-name" placeholder="Name" autocomplete="off" maxlength="60"><button onclick="msCreateEntity('channel')" class="btn-p">CREATE</button><button onclick="closeMsModal()" class="btn-s">CLOSE</button></div></div>
-                <div id="m-group" class="modal-overlay"><div class="modal"><h3>NEW GROUP</h3><input type="text" id="g-name" placeholder="Name" autocomplete="off" maxlength="60"><button onclick="msCreateEntity('group')" class="btn-p">CREATE</button><button onclick="closeMsModal()" class="btn-s">CLOSE</button></div></div>
-                <div id="m-room" class="modal-overlay"><div class="modal"><h3>DIRECTORY</h3><div id="room-list" style="max-height:220px;overflow-y:auto;text-align:left;margin:10px 0"></div><button onclick="closeMsModal()" class="btn-s">CLOSE</button></div></div>
+                <div id="m-menu" class="modal-overlay"><div class="modal menu-modal">
+                    <div class="menu-user"><span class="menu-avatar" id="ms-menu-avatar">☺</span><span class="menu-name" id="ms-menu-name">User</span></div>
+                    <button onclick="openMsModal('m-chan')" class="menu-item"><span class="ms-ico ico-channel"></span>New Channel</button>
+                    <button onclick="openMsModal('m-group')" class="menu-item"><span class="ms-ico ico-group"></span>New Group</button>
+                    <button onclick="openMsModal('m-room')" class="menu-item"><span class="ms-ico ico-directory"></span>Directory</button>
+                    <button onclick="msLogout()" class="menu-item danger"><span class="ms-ico ico-power"></span>Log out</button>
+                </div></div>
+                <div id="m-chan" class="modal-overlay"><div class="modal"><h3>New Channel</h3><input type="text" id="c-name" placeholder="Channel name" autocomplete="off" maxlength="60"><button onclick="msCreateEntity('channel')" class="btn-p">CREATE</button><button onclick="closeMsModal()" class="btn-s">CANCEL</button></div></div>
+                <div id="m-group" class="modal-overlay"><div class="modal"><h3>New Group</h3><input type="text" id="g-name" placeholder="Group name" autocomplete="off" maxlength="60"><button onclick="msCreateEntity('group')" class="btn-p">CREATE</button><button onclick="closeMsModal()" class="btn-s">CANCEL</button></div></div>
+                <div id="m-room" class="modal-overlay"><div class="modal"><h3>Directory</h3><div id="room-list" class="room-list"></div><button onclick="closeMsModal()" class="btn-s">CLOSE</button></div></div>
                 <div id="incoming-call-modal" class="modal-overlay">
                     <div class="call-modal">
-                        <h3>INCOMING CALL</h3>
+                        <div class="call-av" id="call-av">☺</div>
+                        <h3>Incoming Call</h3>
                         <div id="caller-id">...</div>
                         <div class="call-buttons"><button id="btn-accept" onclick="msAcceptCall()">Accept</button><button id="btn-decline" onclick="msDeclineCall()">Decline</button></div>
                     </div>
@@ -3131,8 +3136,13 @@ json body = {{"client_id","ID"},{"code",code},
             if (authUser) {
                 auth.classList.remove('on');
                 app.classList.add('on');
-                const dn = document.getElementById('ms-display-name');
-                if (dn) dn.textContent = authUser.username || 'User';
+                const mn = document.getElementById('ms-menu-name');
+                if (mn) mn.textContent = authUser.username || 'User';
+                const ma = document.getElementById('ms-menu-avatar');
+                if (ma) {
+                    ma.textContent = authUser.avatar_emoji || '☺';
+                    if (authUser.avatar_gradient) ma.style.background = authUser.avatar_gradient;
+                }
                 toggleEmojiPanel(true);
                 msUpdate();
                 clearInterval(_msTimer);
@@ -3172,30 +3182,64 @@ json body = {{"client_id","ID"},{"code",code},
             msPollActiveChat(false);
         }
 
+        function msAvatarStyle(c) {
+            if (c && c.kind === 'dm') return c.avatar_gradient ? 'background:' + c.avatar_gradient : 'background:#4facfe';
+            if (c && c.kind === 'global') return 'background:#4facfe';
+            if (c && c.type === 'channel') return 'background:#4facfe';
+            return 'background:#7a8b9a';
+        }
+        function msAvatarGlyph(c) {
+            if (!c) return '👤';
+            if (c.kind === 'global') return '#';
+            if (c.kind === 'dm') return c.avatar_emoji || '👤';
+            return c.type === 'channel' ? '📢' : '👥';
+        }
+        function msPreviewHTML(c) {
+            if (c.last_icon) return c.last_icon + ' ' + (c.last_name ? escapeHtml(c.last_name) + ': ' : '') + escapeHtml(c.last_text || 'Media');
+            if (c.last_text) return (c.last_name ? escapeHtml(c.last_name) + ': ' : '') + escapeHtml(c.last_text);
+            return 'No messages yet';
+        }
         function renderContacts() {
             const el = document.getElementById('contacts-list');
             if (!el) return;
-            const html = _msChats.map((c) => {
+            el.innerHTML = _msChats.map((c) => {
                 const isActive = c.key === _msChat || (c.kind === 'global' && _msChat === 'global');
-                return `<div class="item ${isActive ? 'active' : ''}" onclick="selectChat('${c.key}')">${msChatLabel(c)}${c.unread ? `<span class="ms-unread">${c.unread}</span>` : ''}</div>`;
+                const time = c.last_ts ? msTime(new Date(c.last_ts).toISOString()) : '';
+                const tick = (c.last_mine && (c.last_text || c.last_icon)) ? '<span class="chat-tick">✓✓</span>' : '';
+                const badge = c.unread ? '<span class="ms-unread">' + (c.unread > 99 ? '99+' : c.unread) + '</span>' : '';
+                const ver = (c.kind === 'dm' && msVerified(c.key)) ? ' <span class="verified">✓</span>' : '';
+                return '<div class="item ' + (isActive ? 'active' : '') + '" onclick="selectChat(\'' + c.key + '\')">'
+                    + '<span class="item-avatar" style="' + msAvatarStyle(c) + '">' + msAvatarGlyph(c) + '</span>'
+                    + '<div class="item-body">'
+                    + '<div class="item-row"><span class="item-name">' + escapeHtml(c.name) + ver + '</span><span class="item-time">' + time + tick + '</span></div>'
+                    + '<div class="item-row"><span class="item-preview">' + msPreviewHTML(c) + '</span>' + badge + '</div>'
+                    + '</div></div>';
             }).join('');
-            el.innerHTML = html;
         }
 
-        function msChatLabel(c) {
-            if (c.kind === 'global') return '# Global Network';
-            if (c.kind === 'room') return (c.icon || '%') + ' ' + escapeHtml(c.name);
-            return '@ ' + escapeHtml(c.name) + (msVerified(c.key) ? ' <span class="verified">✓</span>' : '');
+        function msSetHeader(c) {
+            const nameEl = document.getElementById('chat-with');
+            const stEl = document.getElementById('chat-status');
+            const avEl = document.getElementById('peer-av');
+            if (nameEl) nameEl.innerHTML = escapeHtml((c && c.name) || 'Chat') + ((c && c.kind === 'dm' && msVerified(c.key)) ? ' <span class="verified">✓</span>' : '');
+            if (stEl) stEl.textContent = c ? (c.kind === 'dm' ? 'last seen recently' : c.kind === 'global' ? 'public chat' : (c.type === 'channel' ? 'channel' : 'group')) : '';
+            if (avEl) { avEl.textContent = msAvatarGlyph(c); avEl.style.cssText = msAvatarStyle(c); }
         }
 
         function selectChat(key) {
             if (!key) return;
             _msChat = key;
-            const c = _msChats.find(x => x.key === key) || (key === 'global' ? { kind: 'global', name: 'Global Network', icon: '#' } : null);
-            const head = document.getElementById('chat-with');
-            if (head) head.innerHTML = msChatLabel(c || { kind: 'dm', name: 'Unknown', icon: '@' });
+            const c = _msChats.find(x => x.key === key) || (key === 'global' ? { kind: 'global', name: 'Global', icon: '#' } : { kind: 'dm', name: 'Unknown', icon: '@' });
+            msSetHeader(c);
+            const app = document.getElementById('ms-app');
+            if (app) app.classList.add('chat-open');
             renderContacts();
             msPollActiveChat(true);
+        }
+
+        function msBack() {
+            const app = document.getElementById('ms-app');
+            if (app) app.classList.remove('chat-open');
         }
 
         async function msPollActiveChat(forceScroll) {
@@ -3212,15 +3256,18 @@ json body = {{"client_id","ID"},{"code",code},
             const box = document.getElementById('messages-container');
             if (!box) return;
             const nearBottom = forceScroll || _msFirstOpen || box.scrollHeight - box.scrollTop - box.clientHeight < 140;
+            const isGroup = d.meta && (d.meta.kind === 'room' || d.meta.kind === 'global');
             box.innerHTML = '';
             (d.messages || []).forEach((m) => {
                 const div = document.createElement('div');
                 div.className = 'message' + (m.mine ? ' mine' : '');
-                let content = m.file && m.file_meta ? msFileContent(m) : '<p>' + escapeHtml(m.text) + '</p>';
-                let name = m.mine ? 'You' : (m.from_name || '');
-                if (msVerified(m.from) && !m.mine) name += ' <span class="verified">✓</span>';
-                const tools = m.mine ? ' <span class="ms-del" onclick="msDeleteMsg(\'' + m.id + '\')">[x]</span>' : '';
-                div.innerHTML = '<small>' + name + ' • ' + msTime(m.ts) + (m.edited ? ' <span class="ms-edited">(edited)</span>' : '') + tools + '</small>' + content;
+                let content = m.file && m.file_meta ? msFileContent(m) : '<div class="msg-text">' + escapeHtml(m.text) + '</div>';
+                const tick = m.mine ? '<span class="msg-tick">✓✓</span>' : '';
+                const edited = m.edited ? '<span class="msg-edited">edited</span>' : '';
+                const meta = '<span class="msg-meta">' + edited + msTime(m.ts) + tick + '</span>';
+                const who = (!m.mine && isGroup) ? '<div class="msg-author">' + escapeHtml(m.from_name || '') + (msVerified(m.from) ? ' <span class="verified">✓</span>' : '') + '</div>' : '';
+                const del = m.mine ? '<span class="ms-del" onclick="msDeleteMsg(\'' + m.id + '\')">✕</span>' : '';
+                div.innerHTML = who + content + meta + del;
                 if (m.mine && !m.file) {
                     div.title = 'Double click to edit';
                     div.ondblclick = function () { msEditMsg(m); };
@@ -3491,8 +3538,10 @@ json body = {{"client_id","ID"},{"code",code},
                 if (call && !_msInCallSeen[call.from]) {
                     _msInCallSeen[call.from] = Date.now();
                     _msCaller = call;
+                    const ca = document.getElementById('call-av');
+                    if (ca) { ca.textContent = call.avatar_emoji || '👤'; if (call.avatar_gradient) ca.style.background = call.avatar_gradient; }
                     const cd = document.getElementById('caller-id');
-                    if (cd) cd.innerHTML = '@ ' + escapeHtml(call.username) + ' <br><span style="color:#00f2fe">wants to call you</span>';
+                    if (cd) cd.innerHTML = escapeHtml(call.username) + '<br><span class="call-hint">is calling you…</span>';
                     const im = document.getElementById('incoming-call-modal');
                     if (im) im.classList.add('on');
                     msEnsureAudio();
