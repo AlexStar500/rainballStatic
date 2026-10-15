@@ -47,7 +47,7 @@ jobs:
           fetch robots.txt    /robots.txt
           fetch sitemap.xml   /sitemap.xml
           mkdir -p icons
-          for icon in menu search back send attach emoji call channel group directory power close; do
+          for icon in menu search back send attach emoji call channel group directory power close home; do
             fetch "icons/$icon.png" "/icons/$icon.png"
           done
           cp -f index.html 404.html
