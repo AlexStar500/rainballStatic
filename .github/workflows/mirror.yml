@@ -46,6 +46,10 @@ jobs:
           fetch logo.png      /logo.png
           fetch robots.txt    /robots.txt
           fetch sitemap.xml   /sitemap.xml
+          mkdir -p icons
+          for icon in menu search back send attach emoji call channel group directory power close; do
+            fetch "icons/$icon.png" "/icons/$icon.png"
+          done
           cp -f index.html 404.html
 
       - name: Commit and push if changed
