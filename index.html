@@ -3049,7 +3049,7 @@ json body = {{"client_id","ID"},{"code",code},
         let _msSeen = {};
 
         const MS_VERIFIED = ['5c9f7dbf71131fc10e4a4a0a'];
-        let _msChat = 'global';
+        let _msChat = null;
         let _msChats = [];
         let _msCaller = null;
         let _msInCallSeen = {};
@@ -3071,7 +3071,7 @@ json body = {{"client_id","ID"},{"code",code},
                         <button onclick="msAuth('register')" class="btn-s">CREATE ACCOUNT</button>
                     </div>
                 </div>
-                <div id="ms-app">
+                <div id="ms-app" class="no-chat">
                     <aside class="sidebar">
                         <div class="side-head">
                             <button class="icon-btn" onclick="openMsModal('m-menu')" title="Menu"><span class="ms-ico ico-menu"></span></button>
@@ -3085,13 +3085,19 @@ json body = {{"client_id","ID"},{"code",code},
                     <main class="chat">
                         <header class="chat-header">
                             <button class="icon-btn back-btn" onclick="msBack()" title="Back"><span class="ms-ico ico-back"></span></button>
-                            <div class="peer-avatar" id="peer-av">#</div>
+                            <div class="peer-avatar" id="peer-av">☺</div>
                             <div class="peer-meta">
-                                <div class="peer-name" id="chat-with">Global Network</div>
-                                <div class="peer-status" id="chat-status"></div>
+                                <div class="peer-name" id="chat-with">Rainball</div>
+                                <div class="peer-status" id="chat-status">Select a chat</div>
                             </div>
                             <button class="icon-btn call-btn" onclick="msMakeCall()" title="Call"><span class="ms-ico ico-call"></span></button>
                         </header>
+                        <div class="chat-welcome">
+                            <img src="/logo.png" class="cw-logo" alt="Rainball">
+                            <h2>Welcome to Rainball</h2>
+                            <p>Выберите чат слева или создайте новый</p>
+                            <button class="btn-p cw-btn" onclick="openMsModal('m-chat')">NEW CHAT</button>
+                        </div>
                         <div id="messages-container"></div>
                         <div id="emoji-panel">${MS_EMOJIS.map(e => '<span onclick="msAddEmoji(\'' + e + '\')">' + e + '</span>').join('')}</div>
                         <div class="input-box">
@@ -3104,15 +3110,19 @@ json body = {{"client_id","ID"},{"code",code},
                     </main>
                 </div>
                 <div id="m-menu" class="modal-overlay"><div class="modal menu-modal">
-                    <div class="menu-user"><span class="menu-avatar" id="ms-menu-avatar">☺</span><span class="menu-name" id="ms-menu-name">User</span></div>
-                    <button onclick="openMsModal('m-chan')" class="menu-item"><span class="ms-ico ico-channel"></span>New Channel</button>
+                    <button class="modal-x" onclick="closeMsModal()" title="Close">✕</button>
+                    <div class="menu-user"><span class="menu-avatar" id="ms-menu-avatar">☺</span><div class="menu-user-text"><div class="menu-hello" id="ms-menu-hello">Привет!</div><div class="menu-name" id="ms-menu-name">User</div></div></div>
+                    <button onclick="openMsModal('m-chat')" class="menu-item"><span class="ms-ico ico-search"></span>New Chat</button>
                     <button onclick="openMsModal('m-group')" class="menu-item"><span class="ms-ico ico-group"></span>New Group</button>
+                    <button onclick="openMsModal('m-chan')" class="menu-item"><span class="ms-ico ico-channel"></span>New Channel</button>
                     <button onclick="openMsModal('m-room')" class="menu-item"><span class="ms-ico ico-directory"></span>Directory</button>
+                    <button onclick="msHome()" class="menu-item"><span class="ms-ico ico-home"></span>Back to Search</button>
                     <button onclick="msLogout()" class="menu-item danger"><span class="ms-ico ico-power"></span>Log out</button>
                 </div></div>
-                <div id="m-chan" class="modal-overlay"><div class="modal"><h3>New Channel</h3><input type="text" id="c-name" placeholder="Channel name" autocomplete="off" maxlength="60"><button onclick="msCreateEntity('channel')" class="btn-p">CREATE</button><button onclick="closeMsModal()" class="btn-s">CANCEL</button></div></div>
-                <div id="m-group" class="modal-overlay"><div class="modal"><h3>New Group</h3><input type="text" id="g-name" placeholder="Group name" autocomplete="off" maxlength="60"><button onclick="msCreateEntity('group')" class="btn-p">CREATE</button><button onclick="closeMsModal()" class="btn-s">CANCEL</button></div></div>
-                <div id="m-room" class="modal-overlay"><div class="modal"><h3>Directory</h3><div id="room-list" class="room-list"></div><button onclick="closeMsModal()" class="btn-s">CLOSE</button></div></div>
+                <div id="m-chat" class="modal-overlay"><div class="modal"><button class="modal-x" onclick="closeMsModal()" title="Close">✕</button><h3>New Chat</h3><input type="text" id="chat-search" placeholder="Username" autocomplete="off" maxlength="60"><div id="chat-search-results" class="room-list"></div></div></div>
+                <div id="m-chan" class="modal-overlay"><div class="modal"><button class="modal-x" onclick="closeMsModal()" title="Close">✕</button><h3>New Channel</h3><input type="text" id="c-name" placeholder="Channel name" autocomplete="off" maxlength="60"><button onclick="msCreateEntity('channel')" class="btn-p">CREATE</button><button onclick="closeMsModal()" class="btn-s">CANCEL</button></div></div>
+                <div id="m-group" class="modal-overlay"><div class="modal"><button class="modal-x" onclick="closeMsModal()" title="Close">✕</button><h3>New Group</h3><input type="text" id="g-name" placeholder="Group name" autocomplete="off" maxlength="60"><button onclick="msCreateEntity('group')" class="btn-p">CREATE</button><button onclick="closeMsModal()" class="btn-s">CANCEL</button></div></div>
+                <div id="m-room" class="modal-overlay"><div class="modal"><button class="modal-x" onclick="closeMsModal()" title="Close">✕</button><h3>Directory</h3><div id="room-list" class="room-list"></div><button onclick="closeMsModal()" class="btn-s">CLOSE</button></div></div>
                 <div id="incoming-call-modal" class="modal-overlay">
                     <div class="call-modal">
                         <div class="call-av" id="call-av">☺</div>
@@ -3125,7 +3135,7 @@ json body = {{"client_id","ID"},{"code",code},
         }
 
         function initMessenger() {
-            _msChat = 'global';
+            _msChat = null;
             _msChats = [];
             _msCaller = null;
             _msInCallSeen = {};
@@ -3136,8 +3146,11 @@ json body = {{"client_id","ID"},{"code",code},
             if (authUser) {
                 auth.classList.remove('on');
                 app.classList.add('on');
+                app.classList.add('no-chat');
                 const mn = document.getElementById('ms-menu-name');
                 if (mn) mn.textContent = authUser.username || 'User';
+                const mh = document.getElementById('ms-menu-hello');
+                if (mh) mh.textContent = 'Привет, ' + (authUser.username || 'User') + '!';
                 const ma = document.getElementById('ms-menu-avatar');
                 if (ma) {
                     ma.textContent = authUser.avatar_emoji || '☺';
@@ -3149,6 +3162,7 @@ json body = {{"client_id","ID"},{"code",code},
                 _msTimer = setInterval(msUpdate, 1000);
             } else {
                 app.classList.remove('on');
+                app.classList.remove('no-chat');
                 auth.classList.add('on');
                 const e = document.getElementById('ms-email');
                 if (e) setTimeout(() => e.focus(), 0);
@@ -3159,6 +3173,11 @@ json body = {{"client_id","ID"},{"code",code},
             if (pw) pw.addEventListener('keydown', e => { if (e.key === 'Enter') msAuth('login'); });
             const nc = document.getElementById('new-contact');
             if (nc) nc.addEventListener('keydown', e => { if (e.key === 'Enter') msAddContact(); });
+            const cs = document.getElementById('chat-search');
+            if (cs) {
+                cs.addEventListener('input', msSearchChats);
+                cs.addEventListener('keydown', e => { if (e.key === 'Enter') msSearchChats(); });
+            }
             const input = document.getElementById('msg-input');
             if (input) {
                 input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); msSendMessage(); } });
@@ -3184,13 +3203,13 @@ json body = {{"client_id","ID"},{"code",code},
 
         function msAvatarStyle(c) {
             if (c && c.kind === 'dm') return c.avatar_gradient ? 'background:' + c.avatar_gradient : 'background:#4facfe';
-            if (c && c.kind === 'global') return 'background:#4facfe';
+            if (c && c.kind === 'report') return 'background:#e0a458';
             if (c && c.type === 'channel') return 'background:#4facfe';
             return 'background:#7a8b9a';
         }
         function msAvatarGlyph(c) {
             if (!c) return '👤';
-            if (c.kind === 'global') return '#';
+            if (c.kind === 'report') return '✉';
             if (c.kind === 'dm') return c.avatar_emoji || '👤';
             return c.type === 'channel' ? '📢' : '👥';
         }
@@ -3203,7 +3222,7 @@ json body = {{"client_id","ID"},{"code",code},
             const el = document.getElementById('contacts-list');
             if (!el) return;
             el.innerHTML = _msChats.map((c) => {
-                const isActive = c.key === _msChat || (c.kind === 'global' && _msChat === 'global');
+                const isActive = c.key === _msChat;
                 const time = c.last_ts ? msTime(new Date(c.last_ts).toISOString()) : '';
                 const tick = (c.last_mine && (c.last_text || c.last_icon)) ? '<span class="chat-tick">✓✓</span>' : '';
                 const badge = c.unread ? '<span class="ms-unread">' + (c.unread > 99 ? '99+' : c.unread) + '</span>' : '';
@@ -3221,18 +3240,21 @@ json body = {{"client_id","ID"},{"code",code},
             const nameEl = document.getElementById('chat-with');
             const stEl = document.getElementById('chat-status');
             const avEl = document.getElementById('peer-av');
+            const callBtn = document.querySelector('#ms-app .call-btn');
+            const isReport = c && c.kind === 'report';
             if (nameEl) nameEl.innerHTML = escapeHtml((c && c.name) || 'Chat') + ((c && c.kind === 'dm' && msVerified(c.key)) ? ' <span class="verified">✓</span>' : '');
-            if (stEl) stEl.textContent = c ? (c.kind === 'dm' ? 'last seen recently' : c.kind === 'global' ? 'public chat' : (c.type === 'channel' ? 'channel' : 'group')) : '';
+            if (stEl) stEl.textContent = c ? (c.kind === 'dm' ? 'last seen recently' : isReport ? (c.admin ? (c.email || 'support') : 'support') : (c.type === 'channel' ? 'channel' : 'group')) : '';
             if (avEl) { avEl.textContent = msAvatarGlyph(c); avEl.style.cssText = msAvatarStyle(c); }
+            if (callBtn) callBtn.style.display = (c && c.kind === 'dm') ? '' : 'none';
         }
 
         function selectChat(key) {
             if (!key) return;
             _msChat = key;
-            const c = _msChats.find(x => x.key === key) || (key === 'global' ? { kind: 'global', name: 'Global', icon: '#' } : { kind: 'dm', name: 'Unknown', icon: '@' });
+            const c = _msChats.find(x => x.key === key) || (String(key).indexOf('report') === 0 ? { kind: 'report', name: 'Report', icon: '✉' } : { kind: 'dm', name: 'Chat', icon: '@' });
             msSetHeader(c);
             const app = document.getElementById('ms-app');
-            if (app) app.classList.add('chat-open');
+            if (app) { app.classList.add('chat-open'); app.classList.remove('no-chat'); }
             renderContacts();
             msPollActiveChat(true);
         }
@@ -3242,8 +3264,32 @@ json body = {{"client_id","ID"},{"code",code},
             if (app) app.classList.remove('chat-open');
         }
 
+        function msHome() {
+            closeMsModal();
+            window.location.href = '/';
+        }
+
+        async function msSearchChats() {
+            const inp = document.getElementById('chat-search');
+            const box = document.getElementById('chat-search-results');
+            if (!box) return;
+            const q = (inp && inp.value ? inp.value : '').trim();
+            try {
+                const r = await fetch('/api/messenger/users?q=' + encodeURIComponent(q), { headers: { 'Authorization': 'Bearer ' + authToken } });
+                const users = await r.json();
+                box.innerHTML = (users && users.length)
+                    ? users.map(u => '<div class="ms-room-item" onclick="msPickUser(\'' + u.id + '\')"><span class="item-avatar" style="' + (u.avatar_gradient || 'background:#4facfe') + ';width:34px;height:34px;font-size:16px">' + (u.avatar_emoji || '👤') + '</span>' + escapeHtml(u.username) + (msVerified(u.id) ? ' <span class="verified">✓</span>' : '') + '</div>').join('')
+                    : '<div style="color:var(--tg-muted);padding:8px">Not found</div>';
+            } catch (e) { box.innerHTML = '<div style="color:var(--tg-muted);padding:8px">Error</div>'; }
+        }
+
+        function msPickUser(id) {
+            closeMsModal();
+            selectChat(id);
+        }
+
         async function msPollActiveChat(forceScroll) {
-            if (!authToken) return;
+            if (!authToken || !_msChat) return;
             try {
                 const res = await fetch('/api/messenger/conversation?chat=' + encodeURIComponent(_msChat), { headers: { 'Authorization': 'Bearer ' + authToken } });
                 if (!res.ok) return;
@@ -3255,13 +3301,34 @@ json body = {{"client_id","ID"},{"code",code},
         function renderMessages(d, forceScroll) {
             const box = document.getElementById('messages-container');
             if (!box) return;
+            const app = document.getElementById('ms-app');
+            if (app) app.classList.remove('no-chat');
+            if (d.meta && d.meta.kind === 'report') msSetHeader(d.meta);
+            if (d.meta && d.meta.kind === 'report' && d.meta.admin && d.reports) {
+                box.innerHTML = d.reports.length
+                    ? '<div class="report-list">' + d.reports.map(r =>
+                        '<div class="report-item" onclick="selectChat(\'' + r.key + '\')">'
+                        + '<span class="item-avatar" style="background:#e0a458;width:42px;height:42px;font-size:19px">✉</span>'
+                        + '<div class="report-body"><div class="report-name">' + escapeHtml(r.name) + (r.unread ? '<span class="ms-unread">' + r.unread + '</span>' : '') + '</div>'
+                        + '<div class="report-email">' + escapeHtml(r.email || '') + '</div>'
+                        + '<div class="report-preview">' + escapeHtml(r.last_text || '') + '</div></div></div>').join('') + '</div>'
+                    : '<div class="report-empty">Пока нет обращений</div>';
+                return;
+            }
             const nearBottom = forceScroll || _msFirstOpen || box.scrollHeight - box.scrollTop - box.clientHeight < 140;
-            const isGroup = d.meta && (d.meta.kind === 'room' || d.meta.kind === 'global');
+            const isGroup = d.meta && (d.meta.kind === 'room' || d.meta.kind === 'report');
             box.innerHTML = '';
             (d.messages || []).forEach((m) => {
                 const div = document.createElement('div');
+                if (m.system) {
+                    div.className = 'message system';
+                    div.innerHTML = escapeHtml(m.text);
+                    box.appendChild(div);
+                    return;
+                }
                 div.className = 'message' + (m.mine ? ' mine' : '');
                 let content = m.file && m.file_meta ? msFileContent(m) : '<div class="msg-text">' + escapeHtml(m.text) + '</div>';
+                if (m.email) content = '<div class="msg-email">✉ ' + escapeHtml(m.email) + '</div>' + content;
                 const tick = m.mine ? '<span class="msg-tick">✓✓</span>' : '';
                 const edited = m.edited ? '<span class="msg-edited">edited</span>' : '';
                 const meta = '<span class="msg-meta">' + edited + msTime(m.ts) + tick + '</span>';
@@ -3427,9 +3494,17 @@ json body = {{"client_id","ID"},{"code",code},
         }
 
         async function openMsModal(id) {
+            closeMsModal();
             const m = document.getElementById(id);
             if (!m) return;
             if (id === 'm-room') await msOpenDirectory();
+            if (id === 'm-chat') {
+                const res = document.getElementById('chat-search-results');
+                if (res) res.innerHTML = '';
+                const inp = document.getElementById('chat-search');
+                if (inp) { inp.value = ''; setTimeout(() => inp.focus(), 0); }
+                msSearchChats();
+            }
             m.classList.add('on');
         }
 
